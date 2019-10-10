@@ -47,7 +47,7 @@ const SignIn = () => (
 
 const Banner = ({ user }) => (
   <React.Fragment>
-    { user ? <Welcome user={ user } /> : <SignIn /> }S
+    { user ? <Welcome user={ user } /> : <SignIn /> }
   </React.Fragment>
 );
 
