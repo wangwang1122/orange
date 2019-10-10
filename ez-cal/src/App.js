@@ -4,6 +4,7 @@ import 'firebase/auth';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import "rbx/index.css";
 import { Button, Container, Message, Title } from "rbx";
+import ApiCalendar from 'react-google-calendar-api';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
@@ -31,7 +32,7 @@ const Welcome = ({ user }) => (
   <Message color="info">
     <Message.Header>
       Welcome, {user.displayName}
-      <Button primary onClick={() => firebase.auth().signOut()}>
+      <Button primary onClick={() => {firebase.auth().signOut(); ApiCalendar.handleSignoutClick();}}>
         Log out
       </Button>
     </Message.Header>
@@ -39,17 +40,26 @@ const Welcome = ({ user }) => (
 );
 
 const SignIn = () => (
-  <StyledFirebaseAuth
+  <StyledFirebaseAuth 
     uiConfig={uiConfig}
     firebaseAuth={firebase.auth()}
   />
 );
 
+// TODO fix this
 const Banner = ({ user }) => (
   <React.Fragment>
     { user ? <Welcome user={ user } /> : <SignIn /> }
   </React.Fragment>
 );
+
+const showEvents = () => {
+  if (ApiCalendar.sign)
+    ApiCalendar.listUpcomingEvents(1)
+      .then(({result}) => {
+        console.log(result.items);
+      });
+}
 
 const App = () =>  {
   const [user, setUser] = useState(null);
@@ -59,7 +69,10 @@ const App = () =>  {
   }, []);
 
   return (
-    <Banner user={user}/>
+    <React.Fragment>
+      <Button onClick={() => ApiCalendar.handleAuthClick()}>lol</Button>
+      <Button onClick={() => showEvents()}>lmao</Button>
+    </React.Fragment>
   )
 };
 
