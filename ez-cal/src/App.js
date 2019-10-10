@@ -1,26 +1,66 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect} from 'react';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import "rbx/index.css";
+import { Button, Container, Message, Title } from "rbx";
 
-function App() {
+const firebaseConfig = {
+  apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
+  authDomain: "ezcal-2394a.firebaseapp.com",
+  databaseURL: "https://ezcal-2394a.firebaseio.com",
+  projectId: "ezcal-2394a",
+  storageBucket: "ezcal-2394a.appspot.com",
+  messagingSenderId: "1029216905931",
+  appId: "1:1029216905931:web:33ccd473548edd99ecc94e"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const uiConfig = {
+  signInFlow: 'popup',
+  signInOptions: [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID
+  ],
+  callbacks: {
+    signInSuccessWithAuthResult: () => false
+  }
+};
+
+const Welcome = ({ user }) => (
+  <Message color="info">
+    <Message.Header>
+      Welcome, {user.displayName}
+      <Button primary onClick={() => firebase.auth().signOut()}>
+        Log out
+      </Button>
+    </Message.Header>
+  </Message>
+);
+
+const SignIn = () => (
+  <StyledFirebaseAuth
+    uiConfig={uiConfig}
+    firebaseAuth={firebase.auth()}
+  />
+);
+
+const Banner = ({ user }) => (
+  <React.Fragment>
+    { user ? <Welcome user={ user } /> : <SignIn /> }S
+  </React.Fragment>
+);
+
+const App = () =>  {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(setUser);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <Banner user={user}/>
+  )
+};
 
 export default App;
