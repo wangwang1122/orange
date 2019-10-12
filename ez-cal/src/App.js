@@ -3,7 +3,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import "rbx/index.css";
-import { Button, Container, Message, Title } from "rbx";
+import { Button, Container, Message, Title, Column } from "rbx";
 import ApiCalendar from 'react-google-calendar-api';
 
 const firebaseConfig = {
@@ -59,7 +59,20 @@ const showEvents = () => {
       .then(({result}) => {
         console.log(result.items);
       });
-}
+};
+const day= () =>{
+  let day= new Date();
+  let daysofweek= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  let dayarray=[];
+  for (let i=0;i<7;i++)
+  {
+    dayarray[i]=daysofweek[(day.getDay()+i)%7];
+  }
+  console.log(dayarray);
+  return dayarray.map(x => 
+    <li>{x}</li>
+  )
+};
 
 const App = () =>  {
   const [user, setUser] = useState(null);
@@ -69,10 +82,19 @@ const App = () =>  {
   }, []);
 
   return (
-    <React.Fragment>
-      <Button onClick={() => ApiCalendar.handleAuthClick()}>lol</Button>
-      <Button onClick={() => showEvents()}>lmao</Button>
-    </React.Fragment>
+    // <React.Fragment>
+    //   <Button onClick={() => ApiCalendar.handleAuthClick()}>lol</Button>
+    //   <Button onClick={() => showEvents()}>lmao</Button>
+    // </React.Fragment>
+    // <div> {day()}</div>
+    <Column.Group breakpoint="mobile">
+  {day().map(i => (
+    <Column key={i}>
+        {i}
+    </Column>
+  ))}
+</Column.Group>
+
   )
 };
 
