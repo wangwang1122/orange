@@ -1,0 +1,30 @@
+{
+    "0": {
+        "title": "Lunch with John",
+        "startTime": "12:00 PM",
+        "endTime": "12:45 PM",
+        "day": "Sunday",
+        "date": "13"
+    },
+    "1": {
+        "title": "Soccer Practice",
+        "startTime": "2:00 PM",
+        "endTime": "5:00 PM",
+        "day": "Monday",
+        "date": "14"
+    },
+    "2": {
+        "title": "First Slice Demo",
+        "startTime": "1:00 PM",
+        "endTime": "2:00 PM",
+        "day": "Wednesday",
+        "date": "16"
+    },
+    "3": {
+        "title": "Study at Varun's",
+        "startTime": "8:00 PM",
+        "endTime": "11:00 PM",
+        "day": "Friday",
+        "date": "18"
+    }
+}
