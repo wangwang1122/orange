@@ -5,6 +5,8 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import "rbx/index.css";
 import { Button, Container, Message, Title, Column } from "rbx";
 import ApiCalendar from 'react-google-calendar-api';
+import { Switch, Route } from 'react-router-dom'
+import Header from './Header'
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
@@ -74,6 +76,29 @@ const day= () =>{
   )
 };
 
+function Main() {
+  return (
+    <main>
+      <Switch>
+        <Route exact path='/' component={Home}/>
+        <Route path='/calendar' component={Calendar}/>
+      </Switch>
+    </main>
+  );
+}
+
+const Home = () => (
+  <div>
+    <h1>Home text</h1>
+  </div>
+)
+
+const Calendar = () => (
+  <div>
+    <h1>Calendar text</h1>
+  </div>
+)
+
 const App = () =>  {
   const [user, setUser] = useState(null);
 
@@ -87,14 +112,18 @@ const App = () =>  {
     //   <Button onClick={() => showEvents()}>lmao</Button>
     // </React.Fragment>
     // <div> {day()}</div>
-    <Column.Group breakpoint="mobile">
-  {day().map(i => (
-    <Column key={i}>
-        {i}
-    </Column>
-  ))}
-</Column.Group>
+    <React.Fragment>
+      <Column.Group breakpoint="mobile">
+      {day().map(i => (
+        <Column key={i}>
+            {i}
+        </Column>
+      ))}
+      </Column.Group>
 
+      <Header />
+      <Main />
+    </React.Fragment>
   )
 };
 
