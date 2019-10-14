@@ -5,6 +5,10 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import "rbx/index.css";
 import { Button, Container, Message, Title, Column } from "rbx";
 import ApiCalendar from 'react-google-calendar-api';
+import "./App.css"
+import data from './data/dummy.json'
+
+const times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
@@ -68,17 +72,63 @@ const day= () =>{
   {
     dayarray[i]=daysofweek[(day.getDay()+i)%7];
   }
-  console.log(dayarray);
-  return dayarray.map(x => 
-    <li>{x}</li>
-  )
+  return dayarray
 };
+
+const daygrid = () => {
+  let days = day();
+  let times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
+  
+
+  let timeBlock = times.map(x => {
+      return <div className="dayHour">{x}</div>
+  })
+
+  let cal = []
+  cal.push(<div className="dayCol">
+            <div className="dayHead"></div>
+              {timeBlock}
+            </div>
+  )
+  for (let i = 0; i < days.length; i++) {
+      let hours = []
+      for (let j = 0; j<= 14; j++) {
+        hours.push(<div id={`${days[i]} ${times[j]}`} className="dayHour"/>)
+      }
+
+        cal.push(<div className="dayCol">
+            <div className="dayHead">{days[i]}</div>
+              {hours}
+            </div>)
+
+  }
+
+  return (<div className="dayWrapper">
+            {cal}
+          </div>);
+}
+
+  const setBusy = () => {
+    for (let i = 0; i < Object.values(data).length; i++) {
+      let day= data[i].day;
+      let startIndex = times.indexOf(data[i].startTime)
+      let endIndex = times.indexOf(data[i].endTime)
+      for(let j = startIndex; j<= endIndex; j++) {
+        let nextEvent = document.getElementById(`${day} ${times[j]}`)
+        nextEvent.className += "Busy"
+      }
+
+    }
+  }
 
 const App = () =>  {
   const [user, setUser] = useState(null);
 
+
+  
   useEffect(() => {
     firebase.auth().onAuthStateChanged(setUser);
+    setBusy();
   }, []);
 
   return (
@@ -87,13 +137,7 @@ const App = () =>  {
     //   <Button onClick={() => showEvents()}>lmao</Button>
     // </React.Fragment>
     // <div> {day()}</div>
-    <Column.Group breakpoint="mobile">
-  {day().map(i => (
-    <Column key={i}>
-        {i}
-    </Column>
-  ))}
-</Column.Group>
+    <div> {daygrid()}</div>
 
   )
 };
