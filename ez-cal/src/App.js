@@ -34,77 +34,6 @@ const uiConfig = {
 };
 
 
-const Welcome = ({ user }) => (
-  <Message color="info">
-    <Message.Header>
-      Welcome, {user.displayName}
-      <Button primary onClick={() => {firebase.auth().signOut(); ApiCalendar.handleSignoutClick();}}>
-        Log out
-      </Button>
-    </Message.Header>
-  </Message>
-);
-
-const SignIn = () => (
-  <StyledFirebaseAuth 
-    uiConfig={uiConfig}
-    firebaseAuth={firebase.auth()}
-  />
-);
-
-// TODO fix this
-const Banner = ({ user }) => (
-  <React.Fragment>
-    { user ? <Welcome user={ user } /> : <SignIn /> }
-  </React.Fragment>
-);
-
-const showEvents = () => {
-  if (ApiCalendar.sign)
-    ApiCalendar.listUpcomingEvents(1)
-      .then(({result}) => {
-        console.log(result.items);
-      });
-};
-const day= () =>{
-  let day= new Date();
-  let daysofweek= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  let dayarray=[];
- 
-  for (let i=0;i<7;i++)
-// const Welcome = ({ user }) => (
-//   <Message color="info">
-//     <Message.Header>
-//       Welcome, {user.displayName}
-//       <Button primary onClick={() => {firebase.auth().signOut(); ApiCalendar.handleSignoutClick();}}>
-//         Log out
-//       </Button>
-//     </Message.Header>
-//   </Message>
-// );
-
-// const SignIn = () => (
-//   <StyledFirebaseAuth 
-//     uiConfig={uiConfig}
-//     firebaseAuth={firebase.auth()}
-//   />
-// );
-
-// // TODO fix this
-// const Banner = ({ user }) => (
-//   <React.Fragment>
-//     { user ? <Welcome user={ user } /> : <SignIn /> }
-//   </React.Fragment>
-// );
-
-// const showEvents = () => {
-//   if (ApiCalendar.sign)
-//     ApiCalendar.listUpcomingEvents(1)
-//       .then(({result}) => {
-//         console.log(result.items);
-//       });
-// };
-
 function Main() {
   return (
     <main>
@@ -145,6 +74,7 @@ const day = () =>{
   let daysofweek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   let dayarray =[];
   for (let i = 0; i < 7; i++)
+
   {
     dayarray[i] = daysofweek[(day.getDay() + i) % 7];
   }
@@ -208,7 +138,6 @@ const daygrid = () => {
 
   const setBusy = () => {
     for (let i = 0; i < Object.values(data).length; i++) {
-
       let day= data[i].day;
       let startIndex = times.indexOf(data[i].startTime)
       let endIndex = times.indexOf(data[i].endTime)
