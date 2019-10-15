@@ -156,7 +156,7 @@ const App = () =>  {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(setUser);
-    if(window.location.pathname === "/") setBusy(); 
+    setBusy(); 
     // If we're at root, we can show a generic calendar (maybe empty?)
     // Otherwise, fetch the relevant data from firebase?
   }, []);
