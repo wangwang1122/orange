@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState} from "react";
 import Popup from "reactjs-popup";
 import "./index.css";
-import {Card,Content, Message, Delete} from "rbx";
+import {Card,Content, Message, Delete, Button} from "rbx";
 
     const copyCode = (message) => {
       const x = document.createElement('textarea');
@@ -15,8 +15,10 @@ import {Card,Content, Message, Delete} from "rbx";
 
 const Linkgenerator= ({message, title} ) => {
 
+    const [copied, setCopied] = useState("Copy");
+
     return(
-  <Popup trigger={<button className="button"> Send Invitation</button>} modal>
+  <Popup trigger={<Button className="button" style={{backgroundColor:"lightgreen"}}>✉️</Button>} modal>
     {close => (
         <div>
     
@@ -26,6 +28,7 @@ const Linkgenerator= ({message, title} ) => {
    <Delete as="button"
    onClick={() => {
        close();
+       setCopied("Copy");
      }} />
  </Message.Header>
   <Card.Content>
@@ -40,8 +43,9 @@ const Linkgenerator= ({message, title} ) => {
       href="#" 
       onClick={() => {
         copyCode(message);
+        setCopied("Copied!");
       }}> 
-      Copy
+      {copied}
     </Card.Footer.Item>
   </Card.Footer>
 </Card>
