@@ -9,8 +9,6 @@ import { Switch, Route } from 'react-router-dom'
 import "./App.css"
 import LinkGenerator from "./LinkGenerator";
 import data from './data/dummy.json'
-import Nav from './Nav'
-
 
 const times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
 
@@ -158,9 +156,9 @@ const App = () =>  {
 
   return (
     <div className="container">
-      <Nav link={setLink()}/>
+    <LinkGenerator message={setLink()}/>
         {daygrid()}
-
+        
      </div>
 
   )

@@ -18,7 +18,7 @@ const Linkgenerator= ({message, title} ) => {
     const [copied, setCopied] = useState("Copy");
 
     return(
-  <Popup trigger={<Button className="button" style={{backgroundColor:"lightgreen"}}>✉️</Button>} modal>
+  <Popup trigger={<button className="sendInvite"></button>} modal>
     {close => (
         <div>
     
