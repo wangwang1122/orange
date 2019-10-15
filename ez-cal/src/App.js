@@ -7,7 +7,10 @@ import { Button, Container, Message, Title } from "rbx";
 import ApiCalendar from 'react-google-calendar-api';
 import { Switch, Route } from 'react-router-dom'
 import "./App.css"
+import LinkGenerator from "./LinkGenerator";
 import data from './data/dummy.json'
+import Nav from './Nav'
+
 
 const times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
 
@@ -62,11 +65,10 @@ const Calendar = () => (
 )
 
 const setLink = () => {
-  // Potentially do work to save schedule in firebase?
+  // Potentially do work to save schedule in firebase? :)
 
-  var pubLink = document.getElementById("generatedLink");
   var randNum = Math.floor(Math.random() * Math.floor(100));
-  pubLink.innerHTML = window.location.href + randNum;
+  return window.location.href + randNum;
 }
 
 const day = () =>{
@@ -123,16 +125,9 @@ const daygrid = () => {
   }
 
   return (
-    <React.Fragment>
-      <Button onClick={() => setLink()}>
-        Send link
-      </Button>
-      <div id={"generatedLink"}>
-      </div>
       <div className="dayWrapper">
         {cal}
       </div>
-    </React.Fragment>
   );
 };
 
@@ -162,7 +157,11 @@ const App = () =>  {
   }, []);
 
   return (
-    <div className="container"> {daygrid()}</div>
+    <div className="container">
+      <Nav link={setLink()}/>
+        {daygrid()}
+
+     </div>
 
   )
 };
