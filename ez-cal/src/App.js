@@ -3,8 +3,9 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import "rbx/index.css";
-import { Button, Container, Message, Title, Column } from "rbx";
+import { Button, Container, Message, Title } from "rbx";
 import ApiCalendar from 'react-google-calendar-api';
+import { Switch, Route } from 'react-router-dom'
 import "./App.css"
 import data from './data/dummy.json'
 
@@ -31,6 +32,7 @@ const uiConfig = {
     signInSuccessWithAuthResult: () => false
   }
 };
+
 
 const Welcome = ({ user }) => (
   <Message color="info">
@@ -70,10 +72,83 @@ const day= () =>{
   let dayarray=[];
  
   for (let i=0;i<7;i++)
+// const Welcome = ({ user }) => (
+//   <Message color="info">
+//     <Message.Header>
+//       Welcome, {user.displayName}
+//       <Button primary onClick={() => {firebase.auth().signOut(); ApiCalendar.handleSignoutClick();}}>
+//         Log out
+//       </Button>
+//     </Message.Header>
+//   </Message>
+// );
+
+// const SignIn = () => (
+//   <StyledFirebaseAuth 
+//     uiConfig={uiConfig}
+//     firebaseAuth={firebase.auth()}
+//   />
+// );
+
+// // TODO fix this
+// const Banner = ({ user }) => (
+//   <React.Fragment>
+//     { user ? <Welcome user={ user } /> : <SignIn /> }
+//   </React.Fragment>
+// );
+
+// const showEvents = () => {
+//   if (ApiCalendar.sign)
+//     ApiCalendar.listUpcomingEvents(1)
+//       .then(({result}) => {
+//         console.log(result.items);
+//       });
+// };
+
+function Main() {
+  return (
+    <main>
+      <Switch>
+        <Route exact path='/' component={Home}/>
+        <Route path={window.location.pathname} component={Calendar}/>
+      </Switch>
+    </main>
+  );
+}
+
+const Home = () => (
+  <div>
+    {daygrid()}
+  </div>
+)
+
+const Calendar = () => (
+  <div>
+    Hi, welcome to {window.location.pathname}! 
+    We can fetch the relevant data from firebase and show it here!
+  </div>
+  // On reaching this component, it means we aren't at root, and we're at a subdomain/directory
+  // When we're doing it for real, we can either populate the contents of the calendar 
+  // here or in useEffect, not sure what the best way is (or maybe in daygrid())
+)
+
+const setLink = () => {
+  // Potentially do work to save schedule in firebase?
+
+  var pubLink = document.getElementById("generatedLink");
+  var randNum = Math.floor(Math.random() * Math.floor(100));
+  pubLink.innerHTML = window.location.href + randNum;
+}
+
+const day = () =>{
+  let day = new Date();
+  let daysofweek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  let dayarray =[];
+  for (let i = 0; i < 7; i++)
   {
-    dayarray[i]=daysofweek[(day.getDay()+i)%7];
+    dayarray[i] = daysofweek[(day.getDay() + i) % 7];
   }
-  return dayarray
+  return dayarray;
 };
 
 const date = () => {
@@ -117,13 +192,23 @@ const daygrid = () => {
 
   }
 
-  return (<div className="dayWrapper">
-            {cal}
-          </div>);
-}
+  return (
+    <React.Fragment>
+      <Button onClick={() => setLink()}>
+        Send link
+      </Button>
+      <div id={"generatedLink"}>
+      </div>
+      <div className="dayWrapper">
+        {cal}
+      </div>
+    </React.Fragment>
+  );
+};
 
   const setBusy = () => {
     for (let i = 0; i < Object.values(data).length; i++) {
+
       let day= data[i].day;
       let startIndex = times.indexOf(data[i].startTime)
       let endIndex = times.indexOf(data[i].endTime)
@@ -140,11 +225,11 @@ const daygrid = () => {
 const App = () =>  {
   const [user, setUser] = useState(null);
 
-
-  
   useEffect(() => {
     firebase.auth().onAuthStateChanged(setUser);
-    setBusy();
+    if(window.location.pathname === "/") setBusy(); 
+    // If we're at root, we can show a generic calendar (maybe empty?)
+    // Otherwise, fetch the relevant data from firebase?
   }, []);
 
   return (
