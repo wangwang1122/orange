@@ -1,0 +1,30 @@
+{
+    "0": {
+        "title": "Lunch with Pete",
+        "startTime": "12:00",
+        "endTime": "13:00",
+        "day": "Sunday",
+        "date": "20"
+    },
+    "1": {
+        "title": "Tentative Meeting w/ Advisor",
+        "startTime": "10:00",
+        "endTime": "12:00",
+        "day": "Saturday",
+        "date": "26"
+    },
+    "2": {
+        "title": "Second Slice Demo",
+        "startTime": "13:00",
+        "endTime": "14:00",
+        "day": "Wednesday",
+        "date": "23"
+    },
+    "3": {
+        "title": "Study at Varun's",
+        "startTime": "20:00",
+        "endTime": "23:00",
+        "day": "Monday",
+        "date": "21"
+    }
+}
