@@ -4,7 +4,7 @@ import 'firebase/auth';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import "rbx/index.css";
 import { Button, Container, Message, Title } from "rbx";
-import ApiCalendar from 'react-google-calendar-api';
+import ApiCalendar from "./ApiCalendar";
 import { Switch, Route } from 'react-router-dom'
 import "./App.css"
 import LinkGenerator from "./LinkGenerator";
@@ -162,7 +162,7 @@ const daygrid = () => {
 
   const showEvents = () => {
     if (ApiCalendar.sign)
-      ApiCalendar.listUpcomingEvents(7)
+      ApiCalendar.listUpcomingEvents()
         .then(({result}) => {
           console.log(result.items);
         });
