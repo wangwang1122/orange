@@ -4,7 +4,7 @@
         "startTime": "12:00",
         "endTime": "13:00",
         "day": "Sunday",
-        "date": "13"
+        "date": "20"
     },
     "1": {
         "title": "Soccer Practice",
@@ -24,7 +24,7 @@
         "title": "Study at Varun's",
         "startTime": "20:00",
         "endTime": "23:00",
-        "day": "Friday",
-        "date": "18"
+        "day": "Monday",
+        "date": "21"
     }
 }

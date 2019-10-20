@@ -110,7 +110,7 @@ const daygrid = () => {
   for (let i = 0; i < days.length; i++) {
       let hours = []
       for (let j = 0; j<= 14; j++) {
-        hours.push(<div id={`${days[i]} ${times[j]}`} className="dayHour"/>)
+        hours.push(<div id={`${days[i]} ${dates[i]} ${times[j]}`} className="dayHour"/>)
       }
 
         cal.push(<div className="dayCol">
@@ -132,12 +132,16 @@ const daygrid = () => {
   const setBusy = () => {
     for (let i = 0; i < Object.values(data).length; i++) {
       let day= data[i].day;
+      let date = data[i].date;
       let startIndex = times.indexOf(data[i].startTime)
       let endIndex = times.indexOf(data[i].endTime)
-      let event = document.getElementById(`${day} ${times[startIndex]}`)
+      let event = document.getElementById(`${day} ${date} ${times[startIndex]}`)
+
+      if(event === null) continue;
+
       event.innerHTML = data[i].title;
       for(let j = startIndex; j<= endIndex; j++) {
-        let nextEvent = document.getElementById(`${day} ${times[j]}`)
+        let nextEvent = document.getElementById(`${day} ${date} ${times[j]}`)
         nextEvent.className += "Busy"
       }
 
