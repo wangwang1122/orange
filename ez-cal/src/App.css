@@ -1,22 +1,124 @@
-.App {
-  text-align: center;
-}
 
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.dayCol {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #09d3ac;
+.dayHead {
+  height: 72px;
+  padding: 8px;
+  background: #719AD0;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.dayHead:hover {
+  background: #3D497E;
+
+}
+
+.dayEmpty {
+    height: 72px;
+
+}
+
+.dayDate {
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  border-radius: 100%;
+  background: white;
+  color: #719AD0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom:8px;
+  left: calc(50% - 14px)
+}
+.dayHour {
+  height: 64px;
+  background: white;
+  box-shadow: inset 0 0 0 0.2px #8F8389;
+}
+
+.dayTime {
+  height: 64px;
+  text-align: right;
+  padding-right: 4px;
+  color: #121619;
+}
+.dayHourBusy {
+   height: 64px;
+  background: #E85257;
+
+}
+
+.dayWrapper {
+  display: grid;
+  grid-template-columns: 9% 13% 13% 13% 13% 13% 13% 13%;
+}
+
+.container {
+  font-family: 'Avenir';
+  width: 95%;
+  padding: 24px 0 24px;
+}
+
+.sendInvite {
+  background-image: url("./paper-plane.svg");
+  height: 64px;
+  width: 64px;
+  background-size: 36px;
+  background-position: top 50% right 50%;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  border: none;
+  background-color: #56E39F;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.sendInvite:hover {
+  background-color: #59C9A5;
+}
+
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(1, 1, 1, 0.5);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContainer {
+  position: absolute;
+  background: white;
+  height: 200px;
+  width: 200px;
+}
+
+.navBar {
+  padding: 8px 24px 8px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: black;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto auto;
 }
