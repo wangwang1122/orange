@@ -180,7 +180,7 @@ const App = () =>  {
   return (
     <div className="container">
       <button onClick={() => {ApiCalendar.handleAuthClick(); showEvents();}}>Sync with Google</button>
-      <LinkGenerator message={setLink()}/>
+      <LinkGenerator link={setLink()}/>
       <Main/>  
     </div>
 
