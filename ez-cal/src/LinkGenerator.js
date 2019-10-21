@@ -1,5 +1,6 @@
-import React, { useState} from "react";
+import React, { useState, Component} from "react";
 import Popup from "reactjs-popup";
+import PropTypes from 'prop-types'
 import "./index.css";
 import {Card,Content, Message, Delete, Button} from "rbx";
 
@@ -33,7 +34,7 @@ const Linkgenerator= ({message, title} ) => {
  </Message.Header>
   <Card.Content>
     <Content textAlign='centered'>
-      {message}
+      <a href={message}>{message}</a>
     </Content>
   </Card.Content>
   <Card.Footer>
@@ -67,4 +68,70 @@ const Linkgenerator= ({message, title} ) => {
     )
 };
 
-export default Linkgenerator;
+
+export default class LinkGenerator extends Component {
+
+  static propTypes = {
+    link: PropTypes.string
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      copied: 'Copy',
+    }
+  }
+
+  copyCode = (message) => {
+      const x = document.createElement('textarea');
+      x.value = message
+      document.body.appendChild(x);
+      x.select();
+      document.execCommand('copy');
+      document.body.removeChild(x);
+      this.setState({
+        copy: 'Copied!'
+      })
+      return;
+    }
+
+    open = () => {
+      this.setState ({
+        show: true
+      })
+    }
+
+    close =() => {
+      this.setState({
+        show: false,
+        copy: 'Copy'
+      })
+    }
+
+
+
+
+  render() {
+
+    return (
+
+      <div>
+        <button onClick={this.open} className="sendInvite"/>
+        {this.state.show ? 
+
+          <div className="modalBackdrop">
+            <div className="modalContainer">
+                <div className="closeButtonWrapper">
+                  <button onClick={this.close} className="closeButton"/>
+                </div>
+            </div>
+          </div> 
+          : null}
+      </div>
+      )
+
+
+  }
+
+}

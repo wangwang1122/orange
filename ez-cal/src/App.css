@@ -90,6 +90,26 @@
   background-color: #59C9A5;
 }
 
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(1, 1, 1, 0.5);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContainer {
+  position: absolute;
+  background: white;
+  height: 200px;
+  width: 200px;
+}
+
 .navBar {
   padding: 8px 24px 8px;
   position: fixed;
