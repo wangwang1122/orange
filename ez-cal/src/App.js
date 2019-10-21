@@ -100,18 +100,11 @@ const date = () => {
 const daygrid = () => {
   let days = day();
   let dates = date();
-
-  let timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
-
-  let minutes = [":00", ":15", ":30", ":45"];
-
-  let times = timeHours.flatMap(x => minutes.map(y => x+y));
-
-  // let times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
+  let times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
   
 
   let timeBlock = times.map(x => {
-      return x.split(":")[1] == "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
+      return <div className="dayTime">{x}</div>
   })
 
   let cal = []
@@ -122,7 +115,7 @@ const daygrid = () => {
   )
   for (let i = 0; i < days.length; i++) {
       let hours = []
-      for (let j = 0; j<= times.length; j++) {
+      for (let j = 0; j<= 14; j++) {
         hours.push(<div id={`${dates[i]} ${times[j]}`} className="dayHour"/>)
       }
 
