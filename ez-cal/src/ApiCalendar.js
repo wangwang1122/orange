@@ -123,8 +123,7 @@ class ApiCalendar {
     listUpcomingEvents(calendarId = this.calendar) {
         if (this.gapi) {
             let d = new Date();
-            d.setDate(d.getDate() + 7); 
-            console.log(d.toISOString());
+            d.setDate(d.getDate() + 6); 
             return this.gapi.client.calendar.events.list({
                 'calendarId': calendarId,
                 'timeMin': (new Date()).toISOString(),

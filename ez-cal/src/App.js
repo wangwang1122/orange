@@ -116,7 +116,7 @@ const daygrid = () => {
   for (let i = 0; i < days.length; i++) {
       let hours = []
       for (let j = 0; j<= 14; j++) {
-        hours.push(<div id={`${days[i]} ${dates[i]} ${times[j]}`} className="dayHour"/>)
+        hours.push(<div id={`${dates[i]} ${times[j]}`} className="dayHour"/>)
       }
 
         cal.push(<div className="dayCol">
@@ -135,45 +135,44 @@ const daygrid = () => {
   );
 };
 
-  const setBusy = () => {
-    if (ApiCalendar.sign)
-      ApiCalendar.listUpcomingEvents(1)
-      .then(({result}) => {
-        console.log(result.items);
-    });
-
-    for (let i = 0; i < events.length; i++) {
-      let day = data[i].day;
-      let date = data[i].date;
-      let startIndex = times.indexOf(data[i].startTime)
-      let endIndex = times.indexOf(data[i].endTime)
-      let event = document.getElementById(`${day} ${date} ${times[startIndex]}`)
-
-      if(event === null) continue;
-
-      event.innerHTML = data[i].title;
-      for(let j = startIndex; j<= endIndex; j++) {
-        let nextEvent = document.getElementById(`${day} ${date} ${times[j]}`)
-        nextEvent.className += "Busy"
-      }
-
-    }
-  }
 
   const showEvents = () => {
+    let googleEvents
     if (ApiCalendar.sign)
       ApiCalendar.listUpcomingEvents()
         .then(({result}) => {
-          console.log(result.items);
+          googleEvents = result.items
+          setBusy(googleEvents)
         });
+
+
   };
+
+  const setBusy = (events) => {
+
+    for (let i = 0; i < events.length; i++) {
+      let date = events[i].start.dateTime.substring(8,10)
+      let startTime = events[i].start.dateTime.substring(11,16)
+      let endTime = events[i].end.dateTime.substring(11,16)
+      let startIndex = times.indexOf(startTime)
+      let endIndex = times.indexOf(endTime)
+      let event = document.getElementById(`${date} ${times[startIndex]}`)
+      if(event === null) continue;
+      for(let j = startIndex; j< endIndex; j++) {
+           let nextEvent = document.getElementById(`${date} ${times[j]}`)
+           nextEvent.className += "Busy"
+         }
+    }
+   
+  }
+
+
 
 const App = () =>  {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(setUser);
-    setBusy(); 
     // If we're at root, we can show a generic calendar (maybe empty?)
     // Otherwise, fetch the relevant data from firebase?
   }, []);
