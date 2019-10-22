@@ -13,8 +13,6 @@ import data2 from './data/silly.json'
 
 const times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
 
-const events = Object.values(data);
-
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
   authDomain: "ezcal-2394a.firebaseapp.com",
@@ -105,12 +103,12 @@ const daygrid = () => {
 
   let minutes = [":00", ":15", ":30", ":45"];
 
-  let times = timeHours.flatMap(x => minutes.map(y => x+y));
+  let subTimes = timeHours.flatMap(x => minutes.map(y => x+y));
 
-  // let times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
+  let times = subTimes.filter(x => x.split(":")[1] === "00");
   
 
-  let timeBlock = times.map(x => {
+  let timeBlock = subTimes.map(x => {
       return x.split(":")[1] == "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
   })
 
@@ -120,9 +118,10 @@ const daygrid = () => {
               {timeBlock}
             </div>
   )
+
   for (let i = 0; i < days.length; i++) {
       let hours = []
-      for (let j = 0; j<= times.length; j++) {
+      for (let j = 0; j < subTimes.length; j++) {
         hours.push(<div id={`${dates[i]} ${times[j]}`} className="dayHour"/>)
       }
 
@@ -132,48 +131,43 @@ const daygrid = () => {
             </div>
               {hours}
             </div>)
-
   }
 
   return (
-      <div className="dayWrapper">
-        {cal}
-      </div>
+    <div className="dayWrapper">
+      {cal}
+    </div>
   );
 };
 
 
-  const showEvents = () => {
-    let googleEvents
-    if (ApiCalendar.sign)
-      ApiCalendar.listUpcomingEvents()
-        .then(({result}) => {
-          googleEvents = result.items
-          setBusy(googleEvents)
-        });
+const showEvents = () => {
+  let googleEvents
+  if (ApiCalendar.sign)
+    ApiCalendar.listUpcomingEvents()
+      .then(({result}) => {
+        googleEvents = result.items
+        setBusy(googleEvents)
+      });
+};
 
-
-  };
-
-  const setBusy = (events) => {
-
-    for (let i = 0; i < events.length; i++) {
-      let date = events[i].start.dateTime.substring(8,10)
-      let startTime = events[i].start.dateTime.substring(11,16)
-      let endTime = events[i].end.dateTime.substring(11,16)
-      let startIndex = times.indexOf(startTime)
-      let endIndex = times.indexOf(endTime)
-      let event = document.getElementById(`${date} ${times[startIndex]}`)
-      if(event === null) continue;
-      for(let j = startIndex; j< endIndex; j++) {
-           let nextEvent = document.getElementById(`${date} ${times[j]}`)
-           nextEvent.className += "Busy"
-         }
+const setBusy = (events) => {
+  for (let i = 0; i < events.length; i++) {
+    let date = events[i].start.dateTime.substring(8,10);
+    let startTime = events[i].start.dateTime.substring(11,16);
+    let endTime = events[i].end.dateTime.substring(11,16);
+    console.log(startTime);
+    console.log(endTime);
+    let startIndex = times.indexOf(startTime)
+    let endIndex = times.indexOf(endTime)
+    let event = document.getElementById(`${date} ${times[startIndex]}`)
+    if(event === null) continue;
+    for(let j = startIndex; j< endIndex; j++) {
+      let nextEvent = document.getElementById(`${date} ${times[j]}`);
+      nextEvent.className += "Busy";
     }
-   
   }
-
-
+}
 
 const App = () =>  {
   const [user, setUser] = useState(null);
@@ -188,9 +182,8 @@ const App = () =>  {
     <div className="container">
       <button onClick={() => {ApiCalendar.handleAuthClick(); showEvents();}}>Sync with Google</button>
       <LinkGenerator message={setLink()}/>
-      <Main/>  
+      <Main/>
     </div>
-
   )
 };
 
