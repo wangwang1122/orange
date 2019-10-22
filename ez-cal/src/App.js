@@ -100,7 +100,6 @@ const date = () => {
 const daygrid = () => {
   let days = day();
   let dates = date();
-
   let timeBlock = subTimes.map(x => {
     return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
   })
@@ -171,9 +170,9 @@ const App = () => {
 
   return (
     <div className="container">
-      <button onClick={() => { ApiCalendar.handleAuthClick(); showEvents(); }}>Sync with Google</button>
-      <LinkGenerator message={setLink()} />
-      <Main />
+      <button onClick={() => {ApiCalendar.handleAuthClick(); showEvents();}}>Sync with Google</button>
+      <LinkGenerator link={setLink()}/>
+      <Main/>  
     </div>
   )
 };

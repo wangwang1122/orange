@@ -79,15 +79,15 @@ export default class LinkGenerator extends Component {
     }
   }
 
-  copyCode = (message) => {
+  copyCode = () => {
       const x = document.createElement('textarea');
-      x.value = message
+      x.value = this.props.link
       document.body.appendChild(x);
       x.select();
       document.execCommand('copy');
       document.body.removeChild(x);
       this.setState({
-        copy: 'Copied!'
+        copied: 'Copied!'
       })
       return;
     }
@@ -101,7 +101,7 @@ export default class LinkGenerator extends Component {
     close =() => {
       this.setState({
         show: false,
-        copy: 'Copy'
+        copied: 'Copy'
       })
     }
 
@@ -120,6 +120,8 @@ export default class LinkGenerator extends Component {
             <div className="modalContainer">
                 <div className="closeButtonWrapper">
                   <button onClick={this.close} className="closeButton"/>
+                  <div>{this.props.link}</div>
+                  <button onClick={this.copyCode} className="copyButton">{this.state.copied}</button>
                 </div>
             </div>
           </div> 
