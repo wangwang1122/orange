@@ -61,6 +61,10 @@ class ApiCalendar {
             window['gapi'].load('client:auth2', this.initClient);
         };
     }
+    getUserID() {
+        //console.log(this.gapi.auth2.getAuthInstance().currentUser['Ab']['El']);
+        return this.gapi.auth2.getAuthInstance().currentUser['Ab']['El'];
+    }
     /**
      * Sign in Google user account
      */

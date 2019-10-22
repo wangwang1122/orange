@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import "rbx/index.css";
 import { Button, Container, Message, Title } from "rbx";
@@ -30,6 +31,7 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+const db = firebase.database().ref("users");
 
 const uiConfig = {
   signInFlow: 'popup',
@@ -138,7 +140,9 @@ const showEvents = () => {
   if (ApiCalendar.sign)
     ApiCalendar.listUpcomingEvents()
       .then(({ result }) => {
+        let uid = ApiCalendar.getUserID()
         googleEvents = result.items
+        db.child(uid).set(googleEvents)
         setBusy(googleEvents)
       });
 };
