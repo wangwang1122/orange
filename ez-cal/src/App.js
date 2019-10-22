@@ -20,6 +20,8 @@ let subTimes = timeHours.flatMap(x => minutes.map(y => x + y));
 
 let times = subTimes.filter(x => x.split(":")[1] === "00");
 
+let uid;
+
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
   authDomain: "ezcal-2394a.firebaseapp.com",
@@ -71,10 +73,9 @@ const Calendar = () => (
   // here or in useEffect, not sure what the best way is (or maybe in daygrid())
 )
 
-const setLink = () => {
+const setLink = (uid) => {
   // Potentially do work to save schedule in firebase? :)
-  var randNum = Math.floor(Math.random() * Math.floor(100));
-  return window.location.href + randNum;
+  return window.location.href + uid;
 }
 
 const day = () => {
@@ -140,7 +141,7 @@ const showEvents = () => {
   if (ApiCalendar.sign)
     ApiCalendar.listUpcomingEvents()
       .then(({ result }) => {
-        let uid = ApiCalendar.getUserID()
+        uid = ApiCalendar.getUserID()
         googleEvents = result.items
         db.child(uid).set(googleEvents)
         setBusy(googleEvents)
@@ -175,7 +176,7 @@ const App = () => {
   return (
     <div className="container">
       <button onClick={() => {ApiCalendar.handleAuthClick(); showEvents();}}>Sync with Google</button>
-      <LinkGenerator link={setLink()}/>
+      {uid ? <LinkGenerator link={setLink(uid)}/> : null}
       <Main/>  
     </div>
   )
