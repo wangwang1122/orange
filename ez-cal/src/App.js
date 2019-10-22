@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
@@ -12,15 +12,20 @@ import LinkGenerator from "./LinkGenerator";
 import data from './data/dummy.json'
 import data2 from './data/silly.json'
 
-let timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
 
-let minutes = [":00", ":15", ":30", ":45"];
 
-let subTimes = timeHours.flatMap(x => minutes.map(y => x + y));
 
-let times = subTimes.filter(x => x.split(":")[1] === "00");
 
-let uid;
+
+
+  const timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
+
+const minutes = [":00", ":15", ":30", ":45"];
+
+const subTimes = timeHours.flatMap(x => minutes.map(y => x + y));
+
+const times = subTimes.filter(x => x.split(":")[1] === "00");
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
@@ -45,40 +50,23 @@ const uiConfig = {
   }
 };
 
+export default class App extends Component {
 
-function Main() {
-  return (
-    <main>
-      <Switch>
-        <Route exact path='/' component={Home} />
-        <Route path={window.location.pathname} component={Calendar} />
-      </Switch>
-    </main>
-  );
+
+constructor(props) {
+  super(props);
+  this.state = {
+    uid: null
+  }
 }
 
-const Home = () => (
-  <div>
-    {daygrid()}
-  </div>
-)
 
-const Calendar = () => (
-  <div>
-    Hi, welcome to {window.location.pathname}!
-    We can fetch the relevant data from firebase and show it here!
-  </div>
-  // On reaching this component, it means we aren't at root, and we're at a subdomain/directory
-  // When we're doing it for real, we can either populate the contents of the calendar 
-  // here or in useEffect, not sure what the best way is (or maybe in daygrid())
-)
-
-const setLink = (uid) => {
+setLink = (uid) => {
   // Potentially do work to save schedule in firebase? :)
   return window.location.href + uid;
 }
 
-const day = () => {
+day = () => {
   let day = new Date();
   let daysofweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   let dayarray = [];
@@ -88,7 +76,7 @@ const day = () => {
   return dayarray;
 };
 
-const date = () => {
+date = () => {
   let day = new Date();
 
   let datearray = [];
@@ -100,9 +88,9 @@ const date = () => {
   return datearray;
 }
 
-const daygrid = () => {
-  let days = day();
-  let dates = date();
+daygrid = () => {
+  let days = this.day();
+  let dates = this.date();
   let timeBlock = subTimes.map(x => {
     return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
   })
@@ -136,19 +124,21 @@ const daygrid = () => {
 };
 
 
-const showEvents = () => {
+showEvents = () => {
   let googleEvents
   if (ApiCalendar.sign)
     ApiCalendar.listUpcomingEvents()
       .then(({ result }) => {
-        uid = ApiCalendar.getUserID()
+        this.setState({
+          uid: ApiCalendar.getUserID()
+        })
         googleEvents = result.items
-        db.child(uid).set(googleEvents)
-        setBusy(googleEvents)
+        db.child(this.state.uid).set(googleEvents)
+        this.setBusy(googleEvents)
       });
 };
 
-const setBusy = (events) => {
+setBusy = (events) => {
   for (let i = 0; i < events.length; i++) {
     let date = events[i].start.dateTime.substring(8, 10);
     let startTime = events[i].start.dateTime.substring(11, 16);
@@ -164,22 +154,54 @@ const setBusy = (events) => {
   }
 }
 
-const App = () => {
-  const [user, setUser] = useState(null);
+Calendar = () => (
+  <div>
+    Hi, welcome to {window.location.pathname}!
+    We can fetch the relevant data from firebase and show it here!
+  </div>
+  // On reaching this component, it means we aren't at root, and we're at a subdomain/directory
+  // When we're doing it for real, we can either populate the contents of the calendar 
+  // here or in useEffect, not sure what the best way is (or maybe in daygrid())
+)
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(setUser);
-    // If we're at root, we can show a generic calendar (maybe empty?)
-    // Otherwise, fetch the relevant data from firebase?
-  }, []);
+Home = () => (
+  <div>
+    {this.daygrid()}
+  </div>
+)
 
+Main = () => {
   return (
-    <div className="container">
-      <button onClick={() => {ApiCalendar.handleAuthClick(); showEvents();}}>Sync with Google</button>
-      {uid ? <LinkGenerator link={setLink(uid)}/> : null}
-      <Main/>  
-    </div>
-  )
-};
+    <main>
+      <Switch>
+        <Route exact path='/' component={this.Home} />
+        <Route path={window.location.pathname} component={this.Calendar} />
+      </Switch>
+    </main>
+  );
+}
 
-export default App;
+
+
+
+
+  render() {
+  
+
+
+        return (
+          <div className="container">
+            <button onClick={() => {ApiCalendar.handleAuthClick(); this.showEvents();}}>Sync with Google</button>
+            {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)}/> : null}
+            {this.Main()}  
+          </div>
+        )
+
+
+
+
+  }
+
+
+
+}
