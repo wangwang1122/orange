@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
@@ -11,9 +11,13 @@ import LinkGenerator from "./LinkGenerator";
 import data from './data/dummy.json'
 import data2 from './data/silly.json'
 
-const times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
+let timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
 
-const events = Object.values(data);
+let minutes = [":00", ":15", ":30", ":45"];
+
+let subTimes = timeHours.flatMap(x => minutes.map(y => x + y));
+
+let times = subTimes.filter(x => x.split(":")[1] === "00");
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
@@ -42,8 +46,8 @@ function Main() {
   return (
     <main>
       <Switch>
-        <Route exact path='/' component={Home}/>
-        <Route path={window.location.pathname} component={Calendar}/>
+        <Route exact path='/' component={Home} />
+        <Route path={window.location.pathname} component={Calendar} />
       </Switch>
     </main>
   );
@@ -57,7 +61,7 @@ const Home = () => (
 
 const Calendar = () => (
   <div>
-    Hi, welcome to {window.location.pathname}! 
+    Hi, welcome to {window.location.pathname}!
     We can fetch the relevant data from firebase and show it here!
   </div>
   // On reaching this component, it means we aren't at root, and we're at a subdomain/directory
@@ -67,30 +71,26 @@ const Calendar = () => (
 
 const setLink = () => {
   // Potentially do work to save schedule in firebase? :)
-
   var randNum = Math.floor(Math.random() * Math.floor(100));
   return window.location.href + randNum;
 }
 
-const day = () =>{
+const day = () => {
   let day = new Date();
-  let daysofweek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  let dayarray =[];
-  for (let i = 0; i < 7; i++)
-
-  {
+  let daysofweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  let dayarray = [];
+  for (let i = 0; i < 7; i++) {
     dayarray[i] = daysofweek[(day.getDay() + i) % 7];
   }
   return dayarray;
 };
 
 const date = () => {
-  let day= new Date();
+  let day = new Date();
 
-  let datearray =[];
+  let datearray = [];
 
-  for (let i=0;i<7;i++)
-  {
+  for (let i = 0; i < 7; i++) {
     datearray[i] = day.getDate() + i;
   }
 
@@ -100,75 +100,66 @@ const date = () => {
 const daygrid = () => {
   let days = day();
   let dates = date();
-  let times = ['9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00']
-  
-
-  let timeBlock = times.map(x => {
-      return <div className="dayTime">{x}</div>
+  let timeBlock = subTimes.map(x => {
+    return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
   })
 
   let cal = []
   cal.push(<div className="dayCol">
-            <div className="dayEmpty"></div>
-              {timeBlock}
-            </div>
+    <div className="dayEmpty"></div>
+    {timeBlock}
+  </div>
   )
+
   for (let i = 0; i < days.length; i++) {
-      let hours = []
-      for (let j = 0; j<= 14; j++) {
-        hours.push(<div id={`${dates[i]} ${times[j]}`} className="dayHour"/>)
-      }
+    let hours = []
+    for (let j = 0; j < subTimes.length; j++) {
+      hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />)
+    }
 
-        cal.push(<div className="dayCol">
-            <div className="dayHead">{days[i]}
-            <div className="dayDate">{dates[i]}</div>
-            </div>
-              {hours}
-            </div>)
-
+    cal.push(<div className="dayCol">
+      <div className="dayHead">{days[i]}
+        <div className="dayDate">{dates[i]}</div>
+      </div>
+      {hours}
+    </div>)
   }
 
   return (
-      <div className="dayWrapper">
-        {cal}
-      </div>
+    <div className="dayWrapper">
+      {cal}
+    </div>
   );
 };
 
 
-  const showEvents = () => {
-    let googleEvents
-    if (ApiCalendar.sign)
-      ApiCalendar.listUpcomingEvents()
-        .then(({result}) => {
-          googleEvents = result.items
-          setBusy(googleEvents)
-        });
+const showEvents = () => {
+  let googleEvents
+  if (ApiCalendar.sign)
+    ApiCalendar.listUpcomingEvents()
+      .then(({ result }) => {
+        googleEvents = result.items
+        setBusy(googleEvents)
+      });
+};
 
-
-  };
-
-  const setBusy = (events) => {
-
-    for (let i = 0; i < events.length; i++) {
-      let date = events[i].start.dateTime.substring(8,10)
-      let startTime = events[i].start.dateTime.substring(11,16)
-      let endTime = events[i].end.dateTime.substring(11,16)
-      let startIndex = times.indexOf(startTime)
-      let endIndex = times.indexOf(endTime)
-      let event = document.getElementById(`${date} ${times[startIndex]}`)
-      if(event === null) continue;
-      for(let j = startIndex; j< endIndex; j++) {
-           let nextEvent = document.getElementById(`${date} ${times[j]}`)
-           nextEvent.className += "Busy"
-         }
+const setBusy = (events) => {
+  for (let i = 0; i < events.length; i++) {
+    let date = events[i].start.dateTime.substring(8, 10);
+    let startTime = events[i].start.dateTime.substring(11, 16);
+    let endTime = events[i].end.dateTime.substring(11, 16);
+    let startIndex = subTimes.indexOf(startTime);
+    let endIndex = subTimes.indexOf(endTime);
+    let event = document.getElementById(`${date} ${subTimes[startIndex]}`);
+    if (event === null) continue;
+    for (let j = startIndex; j < endIndex; j++) {
+      let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+      nextEvent.className += "Busy";
     }
-   
   }
+}
 
-
-
-const App = () =>  {
+const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -183,7 +174,6 @@ const App = () =>  {
       <LinkGenerator link={setLink()}/>
       <Main/>  
     </div>
-
   )
 };
 
