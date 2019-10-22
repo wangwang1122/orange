@@ -19,7 +19,6 @@
 
 .dayHead:hover {
   background: #3D497E;
-
 }
 
 .dayEmpty {
@@ -39,6 +38,7 @@
   bottom:8px;
   left: calc(50% - 14px)
 }
+
 .dayHour {
   height: 16px;
   background: white;
@@ -55,7 +55,6 @@
 .dayHourBusy {
   height: 16px;
   background: #E85257;
-
 }
 
 .dayWrapper {
@@ -163,21 +162,21 @@
 
   height: 32px;
   border-radius: 8px;
-    background-color: #56E39F;
-      font-family: 'Avenir';
-      font-weight: bold;
-      font-size: 16px;
-      color: white;
-      border: none;
-      outline: none;
-      transition: all 0.3s ease;
+  background-color: #56E39F;
+  font-family: 'Avenir';
+  font-weight: bold;
+  font-size: 16px;
+  color: white;
+  border: none;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
 .copyButton:hover {
-      background-color: #59C9A5;
+  background-color: #59C9A5;
 }
 
 .copyButton:focus {
-      background-color: #50b494;
+  background-color: #50b494;
 }
 
