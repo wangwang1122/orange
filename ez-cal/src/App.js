@@ -11,6 +11,14 @@ import LinkGenerator from "./LinkGenerator";
 import data from './data/dummy.json'
 import data2 from './data/silly.json'
 
+let timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
+
+let minutes = [":00", ":15", ":30", ":45"];
+
+let subTimes = timeHours.flatMap(x => minutes.map(y => x + y));
+
+let times = subTimes.filter(x => x.split(":")[1] === "00");
+
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
   authDomain: "ezcal-2394a.firebaseapp.com",
@@ -93,17 +101,8 @@ const daygrid = () => {
   let days = day();
   let dates = date();
 
-  let timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
-
-  let minutes = [":00", ":15", ":30", ":45"];
-
-  let subTimes = timeHours.flatMap(x => minutes.map(y => x + y));
-
-  let times = subTimes.filter(x => x.split(":")[1] === "00");
-
-
   let timeBlock = subTimes.map(x => {
-    return x.split(":")[1] == "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
+    return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
   })
 
   let cal = []
@@ -116,7 +115,7 @@ const daygrid = () => {
   for (let i = 0; i < days.length; i++) {
     let hours = []
     for (let j = 0; j < subTimes.length; j++) {
-      hours.push(<div id={`${dates[i]} ${times[j]}`} className="dayHour" />)
+      hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />)
     }
 
     cal.push(<div className="dayCol">
@@ -150,14 +149,12 @@ const setBusy = (events) => {
     let date = events[i].start.dateTime.substring(8, 10);
     let startTime = events[i].start.dateTime.substring(11, 16);
     let endTime = events[i].end.dateTime.substring(11, 16);
-    console.log(startTime);
-    console.log(endTime);
-    let startIndex = times.indexOf(startTime)
-    let endIndex = times.indexOf(endTime)
-    let event = document.getElementById(`${date} ${times[startIndex]}`)
+    let startIndex = subTimes.indexOf(startTime);
+    let endIndex = subTimes.indexOf(endTime);
+    let event = document.getElementById(`${date} ${subTimes[startIndex]}`);
     if (event === null) continue;
     for (let j = startIndex; j < endIndex; j++) {
-      let nextEvent = document.getElementById(`${date} ${times[j]}`);
+      let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
       nextEvent.className += "Busy";
     }
   }
