@@ -18,8 +18,12 @@
 }
 
 .dayHead:hover {
-  background: #3D497E;
+  background-color: #4b7fc3;
 
+}
+
+.dayHead:focus {
+  background-color: #3d72b8;
 }
 
 .dayEmpty {
@@ -41,10 +45,17 @@
 }
 .dayHour {
   height: 16px;
-  background: white;
-  box-shadow: inset 0 0 0 0.2px #000000;
-  border: 0.2px solid black;
+  background: #AFEDC9;
+  box-shadow: inset 0.25px 0 0 0 #20BC62, inset -0.25px 0 0 0 #20BC62;
+  border-top: solid 0.5px #20BC62;
 }
+
+.daySubHour {
+  height: 16px;
+  background: #AFEDC9;
+  box-shadow: inset 0.25px 0 0 0 #20BC62, inset -0.25px 0 0 0 #20BC62;
+}
+
 
 .dayTime {
   height: 16px;
@@ -54,9 +65,16 @@
 }
 .dayHourBusy {
   height: 16px;
-  background: #E85257;
+  background: #ee7f83;
 
 }
+
+.daySubHourBusy {
+  height: 16px;
+  background: #ee7f83;
+}
+
+
 
 .dayWrapper {
   display: grid;
@@ -78,7 +96,7 @@
   background-repeat: no-repeat;
   border-radius: 100%;
   border: none;
-  background-color: #56E39F;
+  background-color: #719AD0;
   position: fixed;
   bottom: 24px;
   right: 24px;
@@ -87,11 +105,11 @@
 }
 
 .sendInvite:hover {
-  background-color: #59C9A5;
+  background-color: #4b7fc3;
 }
 
 .sendInvite:focus {
-      background-color: #50b494;
+      background-color: #3d72b8;
 }
 
 .modalBackdrop {
@@ -163,7 +181,7 @@
 
   height: 32px;
   border-radius: 8px;
-    background-color: #56E39F;
+    background-color: #719AD0;
       font-family: 'Avenir';
       font-weight: bold;
       font-size: 16px;
@@ -174,10 +192,10 @@
 }
 
 .copyButton:hover {
-      background-color: #59C9A5;
+      background-color: #4b7fc3;
 }
 
 .copyButton:focus {
-      background-color: #50b494;
+      background-color: #3d72b8;
 }
 

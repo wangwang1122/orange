@@ -12,13 +12,7 @@ import LinkGenerator from "./LinkGenerator";
 import data from './data/dummy.json'
 import data2 from './data/silly.json'
 
-
-
-
-
-
-
-  const timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
+const timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
 
 const minutes = [":00", ":15", ":30", ":45"];
 
@@ -68,7 +62,7 @@ setLink = (uid) => {
 
 day = () => {
   let day = new Date();
-  let daysofweek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  let daysofweek = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
   let dayarray = [];
   for (let i = 0; i < 7; i++) {
     dayarray[i] = daysofweek[(day.getDay() + i) % 7];
@@ -105,7 +99,11 @@ daygrid = () => {
   for (let i = 0; i < days.length; i++) {
     let hours = []
     for (let j = 0; j < subTimes.length; j++) {
-      hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />)
+      if (times.includes(subTimes[j])) {
+        hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />)         
+      } else {
+         hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="daySubHour" />)        
+      }
     }
 
     cal.push(<div className="dayCol">
@@ -191,7 +189,7 @@ Main = () => {
 
         return (
           <div className="container">
-            <button onClick={() => {ApiCalendar.handleAuthClick(); this.showEvents();}}>Sync with Google</button>
+            {this.state.uid ? <div>Welcome, {ApiCalendar.getUserName()}!</div> : <button onClick={() => {ApiCalendar.handleAuthClick(); this.showEvents();}}>Sync with Google</button>}
             {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)}/> : null}
             {this.Main()}  
           </div>
