@@ -12,14 +12,8 @@ import LinkGenerator from "./LinkGenerator";
 import data from './data/dummy.json'
 import data2 from './data/silly.json'
 
-const timeHours = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y);
-
-const minutes = [":00", ":15", ":30", ":45"];
-
-const subTimes = timeHours.flatMap(x => minutes.map(y => x + y));
-
+const subTimes = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y).flatMap(x => [":00", ":15", ":30", ":45"].map(y => x + y));
 const times = subTimes.filter(x => x.split(":")[1] === "00");
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
@@ -46,160 +40,143 @@ const uiConfig = {
 
 export default class App extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      uid: null,
+      userName: null,
+    }
+  };
 
-constructor(props) {
-  super(props);
-  this.state = {
-    uid: null,
-    userName: null,
-  }
-}
+  componentDidMount = () => {
+    const userLink = window.location.pathname.substring(1);
+    if (userLink) {
+      db.child(userLink).child("events").once('value', this.handleData, error => alert(error));
+    }
+  };
 
+  handleData = (snap) => {
+    if (snap.val()) {
+      this.setBusy(Object.values(snap.val()));
+    }
+  };
 
-setLink = (uid) => {
-  return window.location.href + uid;
-}
+  setLink = (uid) => {
+    return window.location.href + uid;
+  };
 
-day = () => {
-  let day = new Date();
-  let daysofweek = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
-  let dayarray = [];
-  for (let i = 0; i < 7; i++) {
-    dayarray[i] = daysofweek[(day.getDay() + i) % 7];
-  }
-  return dayarray;
-};
+  buildDayList = () => {
+    let date = new Date();
+    let weekDays = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
+    let dayList = [], dateList = [];
 
-date = () => {
-  let day = new Date();
+    for (let i = 0; i < 7; i++) {
+      dayList.push(weekDays[(date.getDay() + i) % 7]);
+      dateList.push(date.getDate() + i);
+    }
 
-  let datearray = [];
+    return [dayList, dateList];
+  };
 
-  for (let i = 0; i < 7; i++) {
-    datearray[i] = day.getDate() + i;
-  }
+  dayGrid = () => {
+    let [days, dates] = this.buildDayList();
+    let timeBlock = subTimes.map(x => {
+      return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
+    });
 
-  return datearray;
-}
+    let cal = [];
+    cal.push(<div className="dayCol">
+      <div className="dayEmpty"></div>
+      {timeBlock}
+    </div>
+    );
 
-daygrid = () => {
-  let days = this.day();
-  let dates = this.date();
-  let timeBlock = subTimes.map(x => {
-    return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
-  })
+    for (let i = 0; i < days.length; i++) {
+      let hours = [];
+      for (let j = 0; j < subTimes.length; j++) {
+        if (times.includes(subTimes[j])) {
+          hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />);
+        } else {
+          hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="daySubHour" />);
+        }
+      }
 
-  let cal = []
-  cal.push(<div className="dayCol">
-    <div className="dayEmpty"></div>
-    {timeBlock}
-  </div>
-  )
+      cal.push(<div className="dayCol">
+        <div className="dayHead">{days[i]}
+          <div className="dayDate">{dates[i]}</div>
+        </div>
+        {hours}
+      </div>);
+    }
 
-  for (let i = 0; i < days.length; i++) {
-    let hours = []
-    for (let j = 0; j < subTimes.length; j++) {
-      if (times.includes(subTimes[j])) {
-           hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />)        
-      } else {
-         hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="daySubHour" />)        
+    return (
+      <div className="dayWrapper">
+        {cal}
+      </div>
+    );
+  };
+
+  showEvents = () => {
+    let googleEvents;
+    if (ApiCalendar.sign)
+      ApiCalendar.listUpcomingEvents()
+        .then(({ result }) => {
+          googleEvents = result.items;
+          this.setState({
+            uid: ApiCalendar.getUserID(),
+            userName: ApiCalendar.getUserName(),
+          })
+          db.child(this.state.uid).child('events').set(googleEvents);
+          db.child(this.state.uid).child('userName').set(this.state.userName);
+          this.setBusy(googleEvents);
+        });
+  };
+
+  setBusy = (events) => {
+    for (let i = 0; i < events.length; i++) {
+      let date = events[i].start.dateTime.substring(8, 10);
+      let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
+      let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+
+      for (let j = startIndex; j < endIndex; j++) {
+        let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+        nextEvent.className += "Busy";
       }
     }
+  };
 
-    cal.push(<div className="dayCol">
-      <div className="dayHead">{days[i]}
-        <div className="dayDate">{dates[i]}</div>
+  SharedCalendar = () => {
+    return (
+      <div>
+        {this.dayGrid()}
       </div>
-      {hours}
-    </div>)
-  }
+    );
+  };
 
-  return (
-    <div className="dayWrapper">
-      {cal}
-    </div>
-  );
-};
+  MyCalendar = () => {
+    return (
+      <div>
+        {this.dayGrid()}
+      </div>
+    );
+  };
 
-
-showEvents = () => {
-  let googleEvents
-  if (ApiCalendar.sign)
-    ApiCalendar.listUpcomingEvents()
-      .then(({ result }) => {
-        this.setState({
-          uid: ApiCalendar.getUserID(),
-          userName: ApiCalendar.getUserName()
-        })
-        googleEvents = result.items
-        db.child(this.state.uid).child('events').set(googleEvents)
-        db.child(this.state.uid).child('userName').set(this.state.userName)
-        this.setBusy(googleEvents)
-      });
-};
-
-setBusy = (events) => {
-  for (let i = 0; i < events.length; i++) {
-    let date = events[i].start.dateTime.substring(8, 10);
-    let startTime = events[i].start.dateTime.substring(11, 16);
-    let endTime = events[i].end.dateTime.substring(11, 16);
-    let startIndex = subTimes.indexOf(startTime);
-    let endIndex = subTimes.indexOf(endTime);
-    let event = document.getElementById(`${date} ${subTimes[startIndex]}`);
-    if (event === null) continue;
-    for (let j = startIndex; j < endIndex; j++) {
-      let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
-      nextEvent.className += "Busy";
-    }
-  }
-}
-
-
-Calendar = () => (
-  <div>
-    Hi, welcome to {window.location.pathname}!
-    We can fetch the relevant data from firebase and show it here!
-  </div>
-)
-
-Home = () => (
-  <div>
-    {this.daygrid()}
-  </div>
-)
-
-Main = () => {
-  return (
-    <main>
+  Main = () => {
+    return (
       <Switch>
-        <Route exact path='/' component={this.Home} />
-        <Route path={window.location.pathname} component={this.Calendar} />
+        <Route exact path='/' component={this.MyCalendar} />
+        <Route path={window.location.pathname} component={this.SharedCalendar} />
       </Switch>
-    </main>
-  );
-}
-
-
-
-
+    );
+  };
 
   render() {
-  
-
-
-        return (
-          <div className="container">
-            {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => {ApiCalendar.handleAuthClick(); this.showEvents();}}>Sync with Google</button>}
-            {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)}/> : null}
-            {this.Main()}  
-          </div>
-        )
-
-
-
-
+    return (
+      <div className="container">
+        {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { ApiCalendar.handleAuthClick(); this.showEvents(); }}>Sync with Google</button>}
+        {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
+        {this.Main()}
+      </div>
+    );
   }
-
-
-
-}
+};
