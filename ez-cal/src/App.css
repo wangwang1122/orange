@@ -19,7 +19,6 @@
 
 .dayHead:hover {
   background-color: #4b7fc3;
-
 }
 
 .dayHead:focus {
@@ -43,6 +42,7 @@
   bottom:8px;
   left: calc(50% - 14px)
 }
+
 .dayHour {
   height: 16px;
   background: #AFEDC9;
@@ -72,6 +72,7 @@
 .daySubHourBusy {
   height: 16px;
   background: #ee7f83;
+
 }
 
 
@@ -192,7 +193,7 @@
 }
 
 .copyButton:hover {
-      background-color: #4b7fc3;
+  background-color: #4b7fc3;
 }
 
 .copyButton:focus {

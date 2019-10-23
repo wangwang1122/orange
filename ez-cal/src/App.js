@@ -100,7 +100,7 @@ daygrid = () => {
     let hours = []
     for (let j = 0; j < subTimes.length; j++) {
       if (times.includes(subTimes[j])) {
-        hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />)         
+           hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />)        
       } else {
          hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="daySubHour" />)        
       }
