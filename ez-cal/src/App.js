@@ -140,7 +140,12 @@ export default class App extends Component {
 
       for (let j = startIndex; j < endIndex; j++) {
         let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
-        nextEvent.className += "Busy";
+        if (nextEvent.className.includes("Busy")) {
+          continue;
+        }
+        else {
+          nextEvent.className += "Busy";
+        }
       }
     }
   };
