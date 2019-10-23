@@ -50,13 +50,13 @@ export default class App extends Component {
 constructor(props) {
   super(props);
   this.state = {
-    uid: null
+    uid: null,
+    userName: null,
   }
 }
 
 
 setLink = (uid) => {
-  // Potentially do work to save schedule in firebase? :)
   return window.location.href + uid;
 }
 
@@ -128,10 +128,12 @@ showEvents = () => {
     ApiCalendar.listUpcomingEvents()
       .then(({ result }) => {
         this.setState({
-          uid: ApiCalendar.getUserID()
+          uid: ApiCalendar.getUserID(),
+          userName: ApiCalendar.getUserName()
         })
         googleEvents = result.items
-        db.child(this.state.uid).set(googleEvents)
+        db.child(this.state.uid).child('events').set(googleEvents)
+        db.child(this.state.uid).child('userName').set(this.state.userName)
         this.setBusy(googleEvents)
       });
 };
@@ -152,14 +154,12 @@ setBusy = (events) => {
   }
 }
 
+
 Calendar = () => (
   <div>
     Hi, welcome to {window.location.pathname}!
     We can fetch the relevant data from firebase and show it here!
   </div>
-  // On reaching this component, it means we aren't at root, and we're at a subdomain/directory
-  // When we're doing it for real, we can either populate the contents of the calendar 
-  // here or in useEffect, not sure what the best way is (or maybe in daygrid())
 )
 
 Home = () => (
@@ -189,7 +189,7 @@ Main = () => {
 
         return (
           <div className="container">
-            {this.state.uid ? <div>Welcome, {ApiCalendar.getUserName()}!</div> : <button onClick={() => {ApiCalendar.handleAuthClick(); this.showEvents();}}>Sync with Google</button>}
+            {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => {ApiCalendar.handleAuthClick(); this.showEvents();}}>Sync with Google</button>}
             {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)}/> : null}
             {this.Main()}  
           </div>
