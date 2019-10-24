@@ -97,12 +97,14 @@ class ApiCalendar {
         // }
         
       };
+    
 
     updateSigninStatus(isSignedIn) {
         this.sign = isSignedIn;
         if(this.getUserID()){
             this.showEvents();
         }
+
     }
     /**
      * Auth to the google Api.
@@ -270,4 +272,5 @@ try {
 catch (e) {
     console.log(e);
 }
+
 export default apiCalendar;

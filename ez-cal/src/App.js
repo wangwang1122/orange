@@ -84,6 +84,25 @@ export default class App extends Component {
       </div>
     );
   };
+  Login = () => {
+    ApiCalendar.handleAuthClick();
+      if(ApiCalendar.sign){
+        this.setState({ 
+      uid:ApiCalendar.getUserID(),
+      userName: ApiCalendar.getUserName()
+    })
+    }
+
+    
+    console.log(ApiCalendar.getUserID());
+  }
+  Logout= () => {
+    ApiCalendar.handleSignoutClick();
+    this.setState({ 
+      uid: null,
+      userName: null,
+    })
+  }
 
   
   SharedCalendar = () => {
@@ -114,9 +133,9 @@ export default class App extends Component {
   render() {
     return (
       <div className="container">
-        <button onClick={()=> ApiCalendar.handleSignoutClick() }>Sign out</button>
+        <button onClick={()=> this.Logout() }>Sign out</button>
 
-        {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { ApiCalendar.handleAuthClick();  }}>Sync with Google</button>}
+        {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
         {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
 
         {this.Main()}
