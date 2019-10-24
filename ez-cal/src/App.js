@@ -1,42 +1,10 @@
 import React, { Component } from 'react';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
-import "rbx/index.css";
-import { Button, Container, Message, Title } from "rbx";
 import ApiCalendar from "./ApiCalendar";
 import { Switch, Route } from 'react-router-dom'
-import "./App.css"
+import "./App.css";
 import LinkGenerator from "./LinkGenerator";
-import data from './data/dummy.json'
-import data2 from './data/silly.json'
-
-const subTimes = Array(Math.ceil((24 - 9))).fill(9).map((x, y) => x + y).flatMap(x => [":00", ":15", ":30", ":45"].map(y => x + y));
-const times = subTimes.filter(x => x.split(":")[1] === "00");
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDZzj4QwsGSpJmXRiVjuqgAq-5YB9EoxrE",
-  authDomain: "ezcal-2394a.firebaseapp.com",
-  databaseURL: "https://ezcal-2394a.firebaseio.com",
-  projectId: "ezcal-2394a",
-  storageBucket: "ezcal-2394a.appspot.com",
-  messagingSenderId: "1029216905931",
-  appId: "1:1029216905931:web:33ccd473548edd99ecc94e"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database().ref("users");
-
-const uiConfig = {
-  signInFlow: 'popup',
-  signInOptions: [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID
-  ],
-  callbacks: {
-    signInSuccessWithAuthResult: () => false
-  }
-};
+import {db} from './firebase';
+import {subTimes, times} from './constants';
 
 export default class App extends Component {
 
