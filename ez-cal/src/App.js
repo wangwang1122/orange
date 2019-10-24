@@ -85,40 +85,7 @@ export default class App extends Component {
     );
   };
 
-  showEvents = () => {
-    let googleEvents;
-    if (ApiCalendar.sign)
-      ApiCalendar.listUpcomingEvents()
-        .then(({ result }) => {
-          googleEvents = result.items;
-          this.setState({
-            uid: ApiCalendar.getUserID(),
-            userName: ApiCalendar.getUserName(),
-          })
-          db.child(this.state.uid).child('events').set(googleEvents);
-          db.child(this.state.uid).child('userName').set(this.state.userName);
-          this.setBusy(googleEvents);
-        });
-  };
-
-  setBusy = (events) => {
-    for (let i = 0; i < events.length; i++) {
-      let date = events[i].start.dateTime.substring(8, 10);
-      let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
-      let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
-
-      for (let j = startIndex; j < endIndex; j++) {
-        let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
-        if (nextEvent.className.includes("Busy")) {
-          continue;
-        }
-        else {
-          nextEvent.className += "Busy";
-        }
-      }
-    }
-  };
-
+  
   SharedCalendar = () => {
     return (
       <div>
@@ -147,8 +114,11 @@ export default class App extends Component {
   render() {
     return (
       <div className="container">
-        {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { ApiCalendar.handleAuthClick(); this.showEvents(); }}>Sync with Google</button>}
+        <button onClick={()=> ApiCalendar.handleSignoutClick() }>Sign out</button>
+
+        {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { ApiCalendar.handleAuthClick();  }}>Sync with Google</button>}
         {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
+
         {this.Main()}
         <Addevents />
 

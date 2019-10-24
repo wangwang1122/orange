@@ -1,3 +1,5 @@
+import {db} from './firebase';
+import {subTimes, times} from './constants';
 const Config = require("./data/apiGoogleconfig.json");
 
 class ApiCalendar {
@@ -27,8 +29,80 @@ class ApiCalendar {
      * Update connection status.
      * @param {boolean} isSignedIn
      */
+    showEvents = () => {
+        let googleEvents;
+        if (this.sign)
+          this.listUpcomingEvents()
+            .then(({ result }) => {
+              googleEvents = result.items;
+            //   this.setState({
+            //     uid: ApiCalendar.getUserID(),
+            //     userName: ApiCalendar.getUserName(),
+            //   })
+            //   db.child(this.state.uid).child('events').set(googleEvents);
+            //   db.child(this.state.uid).child('userName').set(this.state.userName);
+              this.setBusy(googleEvents);
+            });
+      };
+    
+      setBusy = (events) => {
+        for (let i = 0; i < events.length; i++) {
+          let date = events[i].start.dateTime.substring(8, 10);
+          let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
+          let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+    
+          for (let j = startIndex; j < endIndex; j++) {
+            let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+            if (nextEvent.className.includes("Busy")) {
+              continue;
+            }
+            else {
+              nextEvent.className += "Busy";
+            }
+          }
+        }
+      };
+
+    setFree = () => {
+        // for (let i = 0; i < events.length; i++) {
+        //   let date = events[i].start.dateTime.substring(8, 10);
+        //   let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
+        //   let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+    
+        //   for (let j = startIndex; j < endIndex; j++) {
+        //     let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+        //     if (nextEvent.className.includes("Busy")) {
+        //       continue;
+        //     }
+        //     else {
+        //       nextEvent.className += "Busy";
+        //     }
+        //   }
+        // }
+        let x;
+        while (document.getElementsByClassName("dayHourBusy").length > 0) {
+            x = document.getElementsByClassName("dayHourBusy")[0]
+            x.className = "dayHour"
+        }
+        let y;
+        while (document.getElementsByClassName("daySubHourBusy").length > 0) {
+            y = document.getElementsByClassName("daySubHourBusy")[0]
+            y.className = "daySubHour"
+        }
+        // var y=document.getElementsByClassName("daySubHourBusy");
+        // console.log(y);
+        // var j;
+        // for(j=0;j<y.length;j++){
+        //     y[j].className="daySubHour"
+        // }
+        
+      };
+
     updateSigninStatus(isSignedIn) {
         this.sign = isSignedIn;
+        if(this.getUserID()){
+            this.showEvents();
+        }
     }
     /**
      * Auth to the google Api.
@@ -119,6 +193,7 @@ class ApiCalendar {
     handleSignoutClick() {
         if (this.gapi) {
             this.gapi.auth2.getAuthInstance().signOut();
+            this.setFree();
         }
         else {
             console.log("Error: this.gapi not loaded");
