@@ -35,7 +35,7 @@ const Addevents=() =>{
         description: '',
       });
       
-console.log(values);
+
   const handleChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
   };

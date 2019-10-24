@@ -2,19 +2,15 @@ import React, { Component } from 'react';
 import ApiCalendar from "./ApiCalendar";
 import { Switch, Route } from 'react-router-dom'
 import "./App.css";
-import LinkGenerator from "./LinkGenerator";
 import {db} from './firebase';
 import {subTimes, times} from './constants';
 import Addevents from "./addevents";
+
 
 export default class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      uid: null,
-      userName: null,
-    }
   };
 
   componentDidMount = () => {
@@ -29,11 +25,7 @@ export default class App extends Component {
       this.setBusy(Object.values(snap.val()));
     }
   };
-
-  setLink = (uid) => {
-    return window.location.href + uid;
-  };
-
+  
   buildDayList = () => {
     let date = new Date();
     let weekDays = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
@@ -84,27 +76,7 @@ export default class App extends Component {
       </div>
     );
   };
-  Login = () => {
-    ApiCalendar.handleAuthClick();
-      if(ApiCalendar.sign){
-        this.setState({ 
-      uid:ApiCalendar.getUserID(),
-      userName: ApiCalendar.getUserName()
-    })
-    }
 
-    
-    console.log(ApiCalendar.getUserID());
-  }
-  Logout= () => {
-    ApiCalendar.handleSignoutClick();
-    this.setState({ 
-      uid: null,
-      userName: null,
-    })
-  }
-
-  
   SharedCalendar = () => {
     return (
       <div>
@@ -133,10 +105,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="container">
-        <button onClick={()=> this.Logout() }>Sign out</button>
-
-        {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
-        {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
+        <ApiCalendar/>
 
         {this.Main()}
         <Addevents />

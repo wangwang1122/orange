@@ -1,9 +1,24 @@
 import {db} from './firebase';
 import {subTimes, times} from './constants';
+import App from './App'
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import LinkGenerator from "./LinkGenerator";
+
 const Config = require("./data/apiGoogleconfig.json");
 
-class ApiCalendar {
-    constructor() {
+export default class ApiCalendar extends Component  {
+
+    static propTypes = {
+        uid: null,
+        name: null
+    }
+    constructor(props) {
+        super(props);
+        this.state = {
+          uid: null,
+          userName: null,
+        }
         this.sign = false;
         this.gapi = null;
         this.onLoadCallback = null;
@@ -29,18 +44,23 @@ class ApiCalendar {
      * Update connection status.
      * @param {boolean} isSignedIn
      */
+
+    setLink = (uid) => {
+        return window.location.href + uid;
+    };
+
     showEvents = () => {
         let googleEvents;
         if (this.sign)
           this.listUpcomingEvents()
             .then(({ result }) => {
               googleEvents = result.items;
-            //   this.setState({
-            //     uid: ApiCalendar.getUserID(),
-            //     userName: ApiCalendar.getUserName(),
-            //   })
-            //   db.child(this.state.uid).child('events').set(googleEvents);
-            //   db.child(this.state.uid).child('userName').set(this.state.userName);
+            this.setState({
+                uid: this.getUserID(),
+                userName: this.getUserName(),
+            })
+             db.child(this.getUserID()).child('events').set(googleEvents);
+             db.child(this.getUserID()).child('userName').set(this.getUserName());
               this.setBusy(googleEvents);
             });
       };
@@ -264,6 +284,33 @@ class ApiCalendar {
             'resource': event,
         });
     }
+
+      Login = () => {
+        this.handleAuthClick();
+      }
+
+      Logout= () => {
+        this.handleSignoutClick();
+        this.setState({ 
+          uid: null,
+          userName: null,
+        })
+      }
+
+    render () {
+
+        return (
+            <div>
+                    {this.state.uid ? <button onClick={()=> this.Logout() }>Sign out</button> : null}
+
+                    {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
+                    {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
+
+
+
+            </div>
+            )
+    }
 }
 let apiCalendar;
 try {
@@ -272,5 +319,3 @@ try {
 catch (e) {
     console.log(e);
 }
-
-export default apiCalendar;
