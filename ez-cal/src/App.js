@@ -5,6 +5,7 @@ import "./App.css";
 import LinkGenerator from "./LinkGenerator";
 import {db} from './firebase';
 import {subTimes, times} from './constants';
+import Addevents from "./addevents";
 
 export default class App extends Component {
 
@@ -149,6 +150,8 @@ export default class App extends Component {
         {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { ApiCalendar.handleAuthClick(); this.showEvents(); }}>Sync with Google</button>}
         {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
         {this.Main()}
+        <Addevents />
+
       </div>
     );
   }

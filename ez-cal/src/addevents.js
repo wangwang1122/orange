@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import Popup from "reactjs-popup";
 import "./index.css";
-import {Card,Content, Message,Select, Delete,Field,Label,Input,Icon,Button,Control,FontAwesomeIcon } from "rbx";
+import { Delete,Field,Label,Button,Control,FontAwesomeIcon } from "rbx";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
