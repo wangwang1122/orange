@@ -188,7 +188,21 @@ const App = () =>  {
       <Addevents />
     </div>
 
+<<<<<<< Updated upstream
   )
+=======
+  render() {
+    return (
+      <div className="container">
+        {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { ApiCalendar.handleAuthClick(); this.showEvents(); }}>Sync with Google</button>}
+        {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
+        {this.Main()}
+        <Addevents />
+
+      </div>
+    );
+  }
+>>>>>>> Stashed changes
 };
 
 export default App;
