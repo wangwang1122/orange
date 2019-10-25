@@ -40,6 +40,18 @@ export default class ApiCalendar extends Component  {
             console.log(e);
         }
     }
+    componentDidMount = () => {
+        const userLink = window.location.pathname.substring(1);
+        if (userLink) {
+          db.child(userLink).child("events").once('value', this.handleData, error => alert(error));
+        }
+    };
+
+    handleData = (snap) => {
+        if (snap.val()) {
+          this.setBusy2(Object.values(snap.val()));
+        }
+    };
     /**
      * Update connection status.
      * @param {boolean} isSignedIn
@@ -66,22 +78,65 @@ export default class ApiCalendar extends Component  {
       };
     
       setBusy = (events) => {
-        for (let i = 0; i < events.length; i++) {
-          let date = events[i].start.dateTime.substring(8, 10);
-          let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
-          let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
-    
-          for (let j = startIndex; j < endIndex; j++) {
-            let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
-            if (nextEvent.className.includes("Busy")) {
-              continue;
-            }
-            else {
-              nextEvent.className += "Busy";
-            }
-          }
+        const userLink = window.location.pathname.substring(1);
+        if (!userLink) {
+            for (let i = 0; i < events.length; i++) {
+              let date = events[i].start.dateTime.substring(8, 10);
+              let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
+              let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+        
+              for (let j = startIndex; j < endIndex; j++) {
+                let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+                if (nextEvent.className.includes("Busy")) {
+                  continue;
+                }
+                else {
+                  nextEvent.className += "Busy";
+                }
+              }
+            }           
         }
+        else if (userLink && this.state.uid) {
+            for (let i = 0; i < events.length; i++) {
+              let date = events[i].start.dateTime.substring(8, 10);
+              let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
+              let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+        
+              for (let j = startIndex; j < endIndex; j++) {
+                let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+                if (nextEvent.className.includes("FriendBusy")) {
+                    if (nextEvent.className.includes("Sub")) {
+                        nextEvent.className = "daySubHourOverlapBusy"
+                    } else {
+                        nextEvent.className = "dayHourOverlapBusy"
+                    }
+                }
+                else {
+                  nextEvent.className += "Busy";
+                }
+              }
+            }               
+        }
+
       };
+
+      setBusy2 = (events) => {
+            for (let i = 0; i < events.length; i++) {
+              let date = events[i].start.dateTime.substring(8, 10);
+              let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
+              let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+        
+              for (let j = startIndex; j < endIndex; j++) {
+                let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+                if (nextEvent.className.includes("Busy")) {
+                  continue;
+                }
+                else {
+                  nextEvent.className += "FriendBusy";
+                }
+              }
+            } 
+      }
 
     setFree = () => {
         // for (let i = 0; i < events.length; i++) {
@@ -109,6 +164,26 @@ export default class ApiCalendar extends Component  {
             y = document.getElementsByClassName("daySubHourBusy")[0]
             y.className = "daySubHour"
         }
+        let a;
+        while (document.getElementsByClassName("dayHourFriendBusy").length > 0) {
+            a = document.getElementsByClassName("dayHourFriendBusy")[0]
+            a.className = "dayHour"
+        }
+        let b;
+        while (document.getElementsByClassName("daySubHourFriendBusy").length > 0) {
+            b = document.getElementsByClassName("daySubHourFriendBusy")[0]
+            b.className = "daySubHour"
+        }
+        let c;
+        while (document.getElementsByClassName("daySubHourOverlapBusy").length > 0) {
+            c = document.getElementsByClassName("daySubHourOverlapBusy")[0]
+            c.className = "dayHour"
+        }
+        let d;
+        while (document.getElementsByClassName("dayHourOverlapBusy").length > 0) {
+            d = document.getElementsByClassName("dayHourOverlapBusy")[0]
+            d.className = "daySubHour"
+        }                
         // var y=document.getElementsByClassName("daySubHourBusy");
         // console.log(y);
         // var j;
@@ -216,6 +291,10 @@ export default class ApiCalendar extends Component  {
         if (this.gapi) {
             this.gapi.auth2.getAuthInstance().signOut();
             this.setFree();
+            const userLink = window.location.pathname.substring(1);
+            if (userLink) {
+              db.child(userLink).child("events").once('value', this.handleData, error => alert(error));
+            }
         }
         else {
             console.log("Error: this.gapi not loaded");
@@ -305,8 +384,6 @@ export default class ApiCalendar extends Component  {
 
                     {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
                     {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
-
-
 
             </div>
             )

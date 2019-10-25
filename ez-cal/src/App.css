@@ -65,16 +65,37 @@
 }
 .dayHourBusy {
   height: 16px;
-  background: #ee7f83;
+  background: #d76b70;
 
 }
 
 .daySubHourBusy {
   height: 16px;
-  background: #ee7f83;
+  background: #d76b70;
 
 }
 
+.dayHourFriendBusy {
+  height: 16px;
+  background: #ff9497;
+
+}
+
+.daySubHourFriendBusy {
+  height: 16px;
+  background: #ff9497;
+
+}
+
+.daySubHourOverlapBusy {
+  height: 16px;
+  background: #ee7f83;
+}
+
+.dayHourOverlapBusy {
+  height: 16px;
+  background: #ee7f83;
+}
 
 
 .dayWrapper {

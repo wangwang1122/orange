@@ -13,19 +13,6 @@ export default class App extends Component {
     super(props);
   };
 
-  componentDidMount = () => {
-    const userLink = window.location.pathname.substring(1);
-    if (userLink) {
-      db.child(userLink).child("events").once('value', this.handleData, error => alert(error));
-    }
-  };
-
-  handleData = (snap) => {
-    if (snap.val()) {
-      this.setBusy(Object.values(snap.val()));
-    }
-  };
-  
   buildDayList = () => {
     let date = new Date();
     let weekDays = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
