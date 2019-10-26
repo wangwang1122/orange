@@ -123,16 +123,20 @@ export default class ApiCalendar extends Component  {
       setBusy2 = (events) => {
             for (let i = 0; i < events.length; i++) {
               let date = events[i].start.dateTime.substring(8, 10);
-              let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
-              let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
-        
-              for (let j = startIndex; j < endIndex; j++) {
-                let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
-                if (nextEvent.className.includes("Busy")) {
-                  continue;
-                }
-                else {
-                  nextEvent.className += "FriendBusy";
+
+              let today = new Date().getDate();
+              if (date >= today) {
+                let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
+                let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+          
+                for (let j = startIndex; j < endIndex; j++) {
+                  let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+                  if (nextEvent.className.includes("Busy")) {
+                    continue;
+                  }
+                  else {
+                    nextEvent.className += "FriendBusy";
+                  }
                 }
               }
             } 
@@ -396,3 +400,5 @@ try {
 catch (e) {
     console.log(e);
 }
+
+
