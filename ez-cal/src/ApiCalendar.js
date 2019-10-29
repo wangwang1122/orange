@@ -19,6 +19,7 @@ export default class ApiCalendar extends Component  {
         this.state = {
           uid: null,
           userName: null,
+          otherUser: null,
         }
         this.sign = false;
         this.gapi = null;
@@ -120,13 +121,24 @@ export default class ApiCalendar extends Component  {
     componentDidMount = () => {
         const userLink = window.location.pathname.substring(1);
         if (userLink) {
+          db.child(userLink).child("userName").once('value', this.printUserName, error => alert(error));
           db.child(userLink).child("events").once('value', this.handleData, error => alert(error));
         }
     };
 
+    printUserName = (snap) => {
+        if (snap.val()) {
+            // console.log(snap.val());
+            // this.setState({
+            //     otherUser: snap.val(),
+            // })
+            return snap.val();
+        }
+    }
+
     handleData = (snap) => {
         if (snap.val()) {
-          this.setBusy2(Object.values(snap.val()));
+          this.setBusy2(Object.values(snap.val(), this.state.otherUser));
         }
     };
     /**
@@ -189,6 +201,9 @@ export default class ApiCalendar extends Component  {
                     }
                 }
                 else {
+                  if (!nextEvent.className.includes("Sub") && j === startIndex) {
+                    nextEvent.innerHTML = this.state.userName; 
+                  }
                   nextEvent.className += "Busy";
                 }
               }
@@ -197,7 +212,7 @@ export default class ApiCalendar extends Component  {
 
       };
 
-      setBusy2 = (events) => {
+      setBusy2 = (events, userName) => {
             for (let i = 0; i < events.length; i++) {
               let date = events[i].start.dateTime.substring(8, 10);
 
@@ -212,6 +227,7 @@ export default class ApiCalendar extends Component  {
                     continue;
                   }
                   else {
+                    nextEvent.innerHTML = userName;
                     nextEvent.className += "FriendBusy";
                   }
                 }
@@ -461,6 +477,9 @@ export default class ApiCalendar extends Component  {
 
         return (
             <div>
+                <div>
+                    {this.state.otherUser}
+                </div>
                     {this.state.uid ? <button onClick={()=> this.Logout() }>Sign out</button> : null}
 
                     {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
