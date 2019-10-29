@@ -42,14 +42,36 @@ export default class ApiCalendar extends Component  {
             console.log(e);
         }
     }
+    checkLastDay = (month, year) => {
+        var numberOfDays;  
+        if (month == 4 || month == 6 || month == 9 || month == 11)  
+          numberOfDays = 30;  
+        else if (month == 2)  
+        { const isLeapYear = (year) => (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);  
+          if (isLeapYear(year))  
+            numberOfDays = 29;  
+          else  
+            numberOfDays = 28;  
+        }  
+        else  
+          numberOfDays = 31; 
+          
+        return numberOfDays; 
+    }
     buildDayList = () => {
         let date = new Date();
+        let numberOfDays = this.checkLastDay(date.getMonth()+1, date.getFullYear());
         let weekDays = ["Su", "M", "Tu", "W", "Th", "F", "Sa"];
         let dayList = [], dateList = [];
     
         for (let i = 0; i < 7; i++) {
           dayList.push(weekDays[(date.getDay() + i) % 7]);
-          dateList.push(date.getDate() + i);
+          if ((date.getDate() + i) > numberOfDays) {
+            dateList.push((date.getDate() + i) % (numberOfDays));
+          }
+          else {
+            dateList.push(date.getDate() + i);
+          }
         }
     
         return [dayList, dateList];
