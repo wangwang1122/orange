@@ -129,16 +129,18 @@ export default class ApiCalendar extends Component  {
     printUserName = (snap) => {
         if (snap.val()) {
             // console.log(snap.val());
-            // this.setState({
-            //     otherUser: snap.val(),
-            // })
-            return snap.val();
+            this.setState({
+                otherUser: snap.val(),
+            })
+            //return snap.val();
         }
     }
 
     handleData = (snap) => {
         if (snap.val()) {
-          this.setBusy2(Object.values(snap.val(), this.state.otherUser));
+            if (this.state.otherUser) {
+                this.setBusy2(Object.values(snap.val(), this.state.otherUser));
+            }
         }
     };
     /**
@@ -227,7 +229,9 @@ export default class ApiCalendar extends Component  {
                     continue;
                   }
                   else {
-                    nextEvent.innerHTML = userName;
+                      if (j === startIndex) {
+                        nextEvent.innerHTML = this.state.otherUser;
+                      }
                     nextEvent.className += "FriendBusy";
                   }
                 }
