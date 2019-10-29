@@ -73,7 +73,6 @@ export default class ApiCalendar extends Component  {
             dateList.push(date.getDate() + i);
           }
         }
-    
         return [dayList, dateList];
       };
     
@@ -194,9 +193,26 @@ export default class ApiCalendar extends Component  {
         const userLink = window.location.pathname.substring(1);
         if (!userLink) {
             for (let i = 0; i < events.length; i++) {
+              if (!events[i].start.dateTime) {
+                  continue;
+              }
               let date = events[i].start.dateTime.substring(8, 10);
-              let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
-              let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+              if (date.substring(0,1) === '0') {
+                  date = date.substring(1,);
+              }
+              
+              let start = events[i].start.dateTime.substring(11, 16);
+              let end = events[i].end.dateTime.substring(11, 16);
+
+              if (start.substring(0,1) === '0') {
+                start = start.substring(1,);
+               }              
+              if (end.substring(0,1) === '0') {
+                end = end.substring(1,);
+              }
+
+              let startIndex = subTimes.indexOf(start);
+              let endIndex = subTimes.indexOf(end);
         
               for (let j = startIndex; j < endIndex; j++) {
                 let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
@@ -211,9 +227,25 @@ export default class ApiCalendar extends Component  {
         }
         else if (userLink && this.state.uid) {
             for (let i = 0; i < events.length; i++) {
+                if (!events[i].start.dateTime) {
+                    continue;
+                }
               let date = events[i].start.dateTime.substring(8, 10);
-              let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
-              let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+              if (date.substring(0,1) === '0') {
+                date = date.substring(1,);
+              }
+              let start = events[i].start.dateTime.substring(11, 16);
+              let end = events[i].end.dateTime.substring(11, 16);
+
+              if (start.substring(0,1) === '0') {
+                start = start.substring(1,);
+               }              
+              if (end.substring(0,1) === '0') {
+                end = end.substring(1,);
+              }
+
+              let startIndex = subTimes.indexOf(start);
+              let endIndex = subTimes.indexOf(end);
         
               for (let j = startIndex; j < endIndex; j++) {
                 let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
@@ -225,7 +257,7 @@ export default class ApiCalendar extends Component  {
                     }
                 }
                 else {
-                  if (!nextEvent.className.includes("Sub") && j === startIndex) {
+                  if (j === startIndex) {
                     nextEvent.innerHTML = this.state.userName; 
                   }
                   nextEvent.className += "Busy";
@@ -239,11 +271,24 @@ export default class ApiCalendar extends Component  {
       setBusy2 = (events, userName) => {
             for (let i = 0; i < events.length; i++) {
               let date = events[i].start.dateTime.substring(8, 10);
+              if (date.substring(0,1) === '0') {
+                date = date.substring(1,);
+              }
 
               let today = new Date().getDate();
               if (date >= today) {
-                let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
-                let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
+                let start = events[i].start.dateTime.substring(11, 16);
+                let end = events[i].end.dateTime.substring(11, 16);
+  
+                if (start.substring(0,1) === '0') {
+                  start = start.substring(1,);
+                 }              
+                if (end.substring(0,1) === '0') {
+                  end = end.substring(1,);
+                }
+  
+                let startIndex = subTimes.indexOf(start);
+                let endIndex = subTimes.indexOf(end);
           
                 for (let j = startIndex; j < endIndex; j++) {
                   let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
