@@ -4,15 +4,19 @@ import "./index.css";
 import { Delete,Field,Label,Button,Control,FontAwesomeIcon } from "rbx";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types'
 
-
-  class Newaddevents extends React.Component{
+  class Addevents extends React.Component{
+   static propTypes ={
+       addEvent: PropTypes.func,
+       calendarId: PropTypes.string
+   }
     constructor(props) {
     super(props);
     this.state = {
         event: '',
-        starttime: '2019-10-26T10:30',
-        endtime: '2019-10-26T11:30',
+        starttime: '2019-10-30T10:30',
+        endtime: '2019-10-30T11:30',
         description: 'aa',
     };
     this.handleEvent=this.handleEvent.bind(this);
@@ -42,13 +46,16 @@ import TextField from '@material-ui/core/TextField';
         })
     }
     
-    upload(){
 
+    upload(){
+        
+        
+    this.props.addEvent();
     }
 
 
     render(){
-        console.log(this.state.description);
+        // console.log(this.state.description);
       return (
         <Popup trigger={open => (<Button >{open ? "" : ""}</Button>)} modal>
                   {close => (
@@ -150,7 +157,7 @@ import TextField from '@material-ui/core/TextField';
 
 <Field kind="addons" align="right">
 <Control>
-<Button color="info" onClick={this.upload}>Save</Button>
+<Button color="info" onClick={this.upload()}>Save</Button>
 </Control>
 </Field>
 
@@ -160,4 +167,4 @@ import TextField from '@material-ui/core/TextField';
     }
 }
 
-export default Newaddevents;
+export default Addevents;

@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import LinkGenerator from "./LinkGenerator";
 import { Switch, Route } from 'react-router-dom'
+import Addevents from "./newaddevent";
+
+const event={start:{dateTime: "2019-10-30T10:30"}, end:{dateTime: "2019-10-30T11:30"}};
 
 const Config = require("./data/apiGoogleconfig.json");
 
@@ -175,10 +178,12 @@ export default class ApiCalendar extends Component  {
 
     showEvents = () => {
         let googleEvents;
+      
         if (this.sign)
           this.listUpcomingEvents()
             .then(({ result }) => {
               googleEvents = result.items;
+              console.log(googleEvents);
             this.setState({
                 uid: this.getUserID(),
                 userName: this.getUserName(),
@@ -526,10 +531,12 @@ export default class ApiCalendar extends Component  {
      * @returns {any}
      */
     createEvent(event, calendarId = this.calendar) {
-        return this.gapi.client.calendar.events.insert({
-            'calendarId': calendarId,
-            'resource': event,
-        });
+      
+      console.log(event);
+        // return this.gapi.client.calendar.events.insert({
+        //     'calendarId': calendarId,
+        //     'resource': event,
+        // });
     }
 
       Login = () => {
@@ -544,6 +551,11 @@ export default class ApiCalendar extends Component  {
         })
       }
 
+      buttcheeks = () => {
+        console.log("lmfao");
+      }
+
+
     render () {
 
         return (
@@ -557,6 +569,8 @@ export default class ApiCalendar extends Component  {
                     {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
 
                     {this.Main()}
+                    <Addevents  addEvent={this.buttcheeks()} calendarId={this.calendar}/>
+
             </div>
             )
     }

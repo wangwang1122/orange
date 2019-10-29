@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 import "./App.css";
 import {db} from './firebase';
 import {subTimes, times} from './constants';
-import Addevents from "./addevents";
+import Addevents from "./newaddevent";
 
 
 export default class App extends Component {
