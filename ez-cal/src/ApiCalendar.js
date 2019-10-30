@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import LinkGenerator from "./LinkGenerator";
 import { Switch, Route } from 'react-router-dom'
-
+import Addevents from "./newaddevent";
 const Config = require("./data/apiGoogleconfig.json");
 
 export default class ApiCalendar extends Component  {
@@ -37,6 +37,7 @@ export default class ApiCalendar extends Component  {
             this.onLoad = this.onLoad.bind(this);
             this.setCalendar = this.setCalendar.bind(this);
             this.handleClientLoad();
+            this.testcreateEvent=this.testcreateEvent.bind(this);
         }
         catch (e) {
             console.log(e);
@@ -526,11 +527,42 @@ export default class ApiCalendar extends Component  {
      * @returns {any}
      */
     createEvent(event, calendarId = this.calendar) {
+
         return this.gapi.client.calendar.events.insert({
             'calendarId': calendarId,
             'resource': event,
         });
     }
+
+    testcreateEvent(){
+      var event = {
+        'summary': 'Google I/O 2019',
+        'location': '800 Howard St., San Francisco, CA 94103',
+        'description': 'A chance to hear more about Google\'s developer products.',
+        'start': {
+          'dateTime': '2019-11-01T09:00:00-07:00',
+          'timeZone': 'America/Los_Angeles'
+        },
+        'end': {
+          'dateTime': '2019-11-01T17:00:00-07:00',
+          'timeZone': 'America/Los_Angeles'
+        },
+        'recurrence': [
+          'RRULE:FREQ=DAILY;COUNT=2'
+        ],
+        
+      };
+      
+      var request = this.gapi.client.calendar.events.insert({
+        'calendarId': this.calendar,
+        'resource': event
+      });
+      
+      request.execute(function(event) {
+        console.log('event created');
+      });
+    }
+    
 
       Login = () => {
         this.handleAuthClick();
@@ -555,7 +587,7 @@ export default class ApiCalendar extends Component  {
 
                     {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
                     {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
-
+                    <Addevents createEvent={this.testcreateEvent} />
                     {this.Main()}
             </div>
             )

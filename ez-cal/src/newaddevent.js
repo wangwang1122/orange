@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
 
-  class Newaddevents extends React.Component{
+  class Addevents extends React.Component{
     constructor(props) {
     super(props);
     this.state = {
@@ -43,6 +43,8 @@ import TextField from '@material-ui/core/TextField';
     }
     
     upload(){
+        console.log("call upload");
+      this.props.createEvent();
 
     }
 
@@ -160,4 +162,4 @@ import TextField from '@material-ui/core/TextField';
     }
 }
 
-export default Newaddevents;
+export default Addevents;

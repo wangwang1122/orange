@@ -17,7 +17,6 @@ export default class App extends Component {
     return (
       <div className="container">
         <ApiCalendar/>
-        <Addevents />
       </div>
     );
   }
