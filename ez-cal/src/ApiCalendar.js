@@ -534,31 +534,32 @@ export default class ApiCalendar extends Component  {
         });
     }
 
-    testcreateEvent(){
-      var event = {
-        'summary': 'Google I/O 2019',
-        'location': '800 Howard St., San Francisco, CA 94103',
+    testcreateEvent(event,starttime,endtime){
+      
+      var uploadevent = {
+        'summary': event,
+        // 'location': '800 Howard St., San Francisco, CA 94103',
         'description': 'A chance to hear more about Google\'s developer products.',
         'start': {
-          'dateTime': '2019-11-01T09:00:00-07:00',
+          // 'dateTime': '2019-11-01T10:00:00',
+          'dateTime': starttime,
           'timeZone': 'America/Los_Angeles'
         },
         'end': {
-          'dateTime': '2019-11-01T17:00:00-07:00',
+          // 'dateTime': '2019-11-01T13:30:00',
+          'dateTime': endtime,
           'timeZone': 'America/Los_Angeles'
         },
-        'recurrence': [
-          'RRULE:FREQ=DAILY;COUNT=2'
-        ],
+        
         
       };
-      
+
       var request = this.gapi.client.calendar.events.insert({
         'calendarId': this.calendar,
-        'resource': event
+        'resource': uploadevent
       });
       
-      request.execute(function(event) {
+      request.execute(function(uploadevent) {
         console.log('event created');
       });
     }
