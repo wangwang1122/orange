@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import LinkGenerator from "./LinkGenerator";
 import { Switch, Route } from 'react-router-dom'
 import Addevents from "./newaddevent";
+import AddEvent from "./AddEvent";
 const Config = require("./data/apiGoogleconfig.json");
 
 export default class ApiCalendar extends Component  {
@@ -253,22 +254,22 @@ export default class ApiCalendar extends Component  {
                 if (nextEvent.className.includes("FriendBusy")) {
                     if (nextEvent.className.includes("Sub")) {
                         nextEvent.className = "daySubHourOverlapBusy"
-                        if (nextEvent.innerHTML) {
-                             nextEvent.innerHTML = this.state.otherUser + ' ' + this.state.userName
-                        }
+                        // if (nextEvent.innerHTML) {
+                        //      nextEvent.innerHTML = this.state.otherUser + ' ' + this.state.userName
+                        // }
                        
                     } else {
                         nextEvent.className = "dayHourOverlapBusy"
-                        if (nextEvent.innerHTML) {
-                             nextEvent.innerHTML = this.state.userName + ' ' + this.state.otherUser
-                        }
+                        // if (nextEvent.innerHTML) {
+                        //      nextEvent.innerHTML = this.state.userName + ' ' + this.state.otherUser
+                        // }
 
                     }
                 }
                 else {
-                  if (j === startIndex) {
-                    nextEvent.innerHTML = this.state.userName; 
-                  }
+                  // if (j === startIndex) {
+                  //   nextEvent.innerHTML = this.state.userName; 
+                  // }
                   nextEvent.className += "Busy";
                 }
               }
@@ -305,9 +306,9 @@ export default class ApiCalendar extends Component  {
                     continue;
                   }
                   else {
-                      if (j === startIndex) {
-                        nextEvent.innerHTML = this.state.otherUser;
-                      }
+                      // if (j === startIndex) {
+                      //   nextEvent.innerHTML = this.state.otherUser;
+                      // }
                     nextEvent.className += "FriendBusy";
                   }
                 }
@@ -548,21 +549,18 @@ export default class ApiCalendar extends Component  {
         });
     }
 
-    testcreateEvent(event,starttime,endtime){
+    createNewEvent(event,starttime,endtime){
       
       var uploadevent = {
         'summary': event,
-        // 'location': '800 Howard St., San Francisco, CA 94103',
-        'description': 'A chance to hear more about Google\'s developer products.',
+        'description': '',
         'start': {
-          // 'dateTime': '2019-11-01T10:00:00',
           'dateTime': starttime,
-          'timeZone': 'America/Los_Angeles'
+          'timeZone': 'America/Chicago'
         },
         'end': {
-          // 'dateTime': '2019-11-01T13:30:00',
           'dateTime': endtime,
-          'timeZone': 'America/Los_Angeles'
+          'timeZone': 'America/Chicago'
         },
         
         
@@ -599,8 +597,9 @@ export default class ApiCalendar extends Component  {
 
                     {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
                     {(this.state.userName && !this.state.otherUser) ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
-                    <Addevents createEvent={this.testcreateEvent} />
+                    <Addevents createEvent={this.createNewEvent} />
                     {this.Main()}
+                    <AddEvent createEvent={this.createNewEvent} />
             </div>
             )
     }
