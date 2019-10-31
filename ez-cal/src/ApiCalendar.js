@@ -253,8 +253,16 @@ export default class ApiCalendar extends Component  {
                 if (nextEvent.className.includes("FriendBusy")) {
                     if (nextEvent.className.includes("Sub")) {
                         nextEvent.className = "daySubHourOverlapBusy"
+                        if (nextEvent.innerHTML) {
+                             nextEvent.innerHTML = this.state.otherUser + ' ' + this.state.userName
+                        }
+                       
                     } else {
                         nextEvent.className = "dayHourOverlapBusy"
+                        if (nextEvent.innerHTML) {
+                             nextEvent.innerHTML = this.state.userName + ' ' + this.state.otherUser
+                        }
+
                     }
                 }
                 else {
@@ -327,31 +335,37 @@ export default class ApiCalendar extends Component  {
         while (document.getElementsByClassName("dayHourBusy").length > 0) {
             x = document.getElementsByClassName("dayHourBusy")[0]
             x.className = "dayHour"
+            x.innerHTML = ""
         }
         let y;
         while (document.getElementsByClassName("daySubHourBusy").length > 0) {
             y = document.getElementsByClassName("daySubHourBusy")[0]
             y.className = "daySubHour"
+            y.innerHTML = ""
         }
         let a;
         while (document.getElementsByClassName("dayHourFriendBusy").length > 0) {
             a = document.getElementsByClassName("dayHourFriendBusy")[0]
             a.className = "dayHour"
+            a.innerHTML = ""
         }
         let b;
         while (document.getElementsByClassName("daySubHourFriendBusy").length > 0) {
             b = document.getElementsByClassName("daySubHourFriendBusy")[0]
             b.className = "daySubHour"
+            b.innerHTML = ""
         }
         let c;
         while (document.getElementsByClassName("daySubHourOverlapBusy").length > 0) {
             c = document.getElementsByClassName("daySubHourOverlapBusy")[0]
             c.className = "dayHour"
+            c.innerHTML = ""
         }
         let d;
         while (document.getElementsByClassName("dayHourOverlapBusy").length > 0) {
             d = document.getElementsByClassName("dayHourOverlapBusy")[0]
             d.className = "daySubHour"
+            d.innerHTML = ""
         }                
         // var y=document.getElementsByClassName("daySubHourBusy");
         // console.log(y);
@@ -581,13 +595,10 @@ export default class ApiCalendar extends Component  {
 
         return (
             <div>
-                <div>
-                    {this.state.otherUser}
-                </div>
                     {this.state.uid ? <button onClick={()=> this.Logout() }>Sign out</button> : null}
 
                     {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
-                    {this.state.uid ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
+                    {(this.state.userName && !this.state.otherUser) ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
                     <Addevents createEvent={this.testcreateEvent} />
                     {this.Main()}
             </div>

@@ -47,13 +47,14 @@
   height: 16px;
   background: #AFEDC9;
   box-shadow: inset 0.25px 0 0 0 #20BC62, inset -0.25px 0 0 0 #20BC62, inset 0 0.5px 0px 0px #20BC62;
-
+  color: transparent;
 }
 
 .daySubHour {
   height: 16px;
   background: #AFEDC9;
   box-shadow: inset 0.25px 0 0 0 #20BC62, inset -0.25px 0 0 0 #20BC62;
+  color: transparent;
 }
 
 
@@ -65,38 +66,47 @@
 }
 .dayHourBusy {
   height: 16px;
-  background: #d76b70;
+  background: #ff9497;
+    color: transparent;
 
 }
 
 .daySubHourBusy {
   height: 16px;
-  background: #d76b70;
+  background: #ff9497;
+    color: transparent;
 
 }
 
 .dayHourFriendBusy {
   height: 16px;
   background: #ff9497;
+    color: transparent;
 
 }
 
 .daySubHourFriendBusy {
   height: 16px;
   background: #ff9497;
+    color: transparent;
 
 }
 
 .daySubHourOverlapBusy {
   height: 16px;
-  background: #ee7f83;
+  background: #d76b70;
+    color: transparent;
 }
 
 .dayHourOverlapBusy {
   height: 16px;
-  background: #ee7f83;
+  background: #d76b70;
+    color: transparent;
 }
 
+.dayHour:hover, .daySubHour:hover, .dayHourBusy:hover, .daySubHourBusy:hover, .dayHourFriendBusy:hover, .daySubHourFriendBusy:hover, .daySubHourOverlapBusy:hover, .dayHourOverlapBusy:hover {
+  color: #121619;
+}  
 
 .dayWrapper {
   display: grid;
