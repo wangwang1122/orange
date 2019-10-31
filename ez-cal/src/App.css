@@ -126,6 +126,31 @@
   transition: all 0.3s ease;
 }
 
+.addEvent {
+  background-image: url("./plus.svg");
+  height: 64px;
+  width: 64px;
+  background-size: 36px;
+  background-position: top 50% right 50%;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  border: none;
+  background-color: #719AD0;
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.addEvent:hover {
+  background-color: #4b7fc3;
+}
+
+.addEvent:focus {
+      background-color: #3d72b8;
+}
+
 .sendInvite:hover {
   background-color: #4b7fc3;
 }
