@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
     constructor(props) {
     super(props);
     this.state = {
+        show: false,
         event: '',
         starttime: '2019-11-01T10:00:00',
         endtime: '2019-11-01T17:00:00',
@@ -41,6 +42,18 @@ import TextField from '@material-ui/core/TextField';
             description:eventa.target.value
         })
     }
+
+    open = () => {
+      this.setState ({
+        show: true
+      })
+    }
+
+    close =() => {
+      this.setState({
+        show: false,
+      })
+    }
     
     upload(){
         console.log(this.state.starttime);
@@ -52,112 +65,29 @@ import TextField from '@material-ui/core/TextField';
     render(){
         console.log("starttime"  +this.state.starttime+" endtime:  "+ this.state.endtime);
       return (
-        <Popup trigger={open => (<Button >{open ? "" : ""}</Button>)} modal>
-                  {close => (
-<form>
-<Field kind="addons" align="right">
-<Control>
-<Delete as="button" onClick={close} />
-</Control>
-</Field>
-<Field horizontal>
-<Field.Label size="normal">
-      <Label></Label>
-</Field.Label>
-<Field.Body>
-      <Field>
-    <Control>
 
-    <TextField
-        id="event-title"
-        width=" 250" 
-        onChange={this.handleEvent}
-        margin="normal"
-        placeholder="Add event"
+        <div>
+        <button onClick={this.open} className="addEvent"/>
+        {this.state.show ? 
 
-      />    
-      </Control>
-    </Field>
-    </Field.Body>
-</Field>
-
-
-<Field horizontal>
-    <Field.Label size="normal">
-      <Label>Start Time</Label>
-    </Field.Label>
-    <Field.Body>
-      <Field>
-        <Control expanded>
-          
-        <TextField
-        id="datetime-local"
-        type="datetime-local"
-        value={this.state.starttime}
-        onChange={this.handleStarttime}
-        
-        width=" 250"       
-         InputLabelProps={{
-        shrink: true,
-        }}
-      />
-
-        </Control>
-      </Field>
-    </Field.Body>
-  </Field>
-
-<Field horizontal>
-    <Field.Label size="normal">
-      <Label>End Time</Label>
-    </Field.Label>
-    <Field.Body>
-      <Field>
-        <Control expanded>
-        <TextField
-        id="datetime-local"
-        type="datetime-local"
-        // defaultValue="2019-10-24T10:30"
-        value={this.state.endtime}
-        onChange={this.handleEndtime}
-
-        width=" 250"  
-        InputLabelProps={{
-          shrink: true,
-        }}
-        />
-        </Control>
-      </Field>
-    </Field.Body>
-  </Field>
-
-<Field horizontal>
-  <Field.Label size="normal">
-    <Label>Description</Label>
-  </Field.Label>
-  <Field.Body>
-    <Field>
-      <Control>
-      <TextField
-        id="event-title"
-        width=" 250" 
-        onChange={this.handleDescription}
-        margin="normal"
-        placeholder="Description"
-      />    
-      </Control>
-    </Field>
-  </Field.Body>
-</Field>
-
-<Field kind="addons" align="right">
-<Control>
-<Button color="info" onClick={this.upload}>Save</Button>
-</Control>
-</Field>
-
-</form>)}
-</Popup>
+          <div className="modalBackdropAdd">
+            <div className="modalContainerAdd">
+                <div className="closeButtonWrapper">
+                  <button onClick={this.close} className="closeButton"/>
+                    <div>
+                      <div>Event Title:</div>
+                      <input type="text"  onChange={this.handleEvent} />
+                      <div>Start Time:</div>
+                      <input type="datetime-local" value={this.state.starttime} onChange={this.handleStarttime} />
+                      <div>End Time:</div>
+                      <input type="datetime-local"  value={this.state.endtime} onChange={this.handleEndtime} />
+                    </div>
+                  <button onClick={this.upload} className="copyButton">Create Event</button>
+                </div>
+            </div>
+          </div> 
+          : null}
+      </div>
     )
     }
 }

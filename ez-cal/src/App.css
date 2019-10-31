@@ -194,6 +194,32 @@
   padding: 16px;
 }
 
+
+.modalBackdropAdd {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(1, 1, 1, 0.5);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContainerAdd {
+  position: absolute;
+  background: white;
+  min-height: 220px;
+  width: auto;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
 .navBar {
   padding: 8px 24px 8px;
   position: fixed;

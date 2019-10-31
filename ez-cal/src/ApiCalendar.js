@@ -6,7 +6,6 @@ import React, { Component } from 'react';
 import LinkGenerator from "./LinkGenerator";
 import { Switch, Route } from 'react-router-dom'
 import Addevents from "./newaddevent";
-import AddEvent from "./AddEvent";
 const Config = require("./data/apiGoogleconfig.json");
 
 export default class ApiCalendar extends Component  {
@@ -549,7 +548,7 @@ export default class ApiCalendar extends Component  {
         });
     }
 
-    createNewEvent(event,starttime,endtime){
+    testcreateEvent(event,starttime,endtime){
       
       var uploadevent = {
         'summary': event,
@@ -574,6 +573,7 @@ export default class ApiCalendar extends Component  {
       request.execute(function(uploadevent) {
         console.log('event created');
       });
+      window.location.reload();
     }
     
 
@@ -597,9 +597,8 @@ export default class ApiCalendar extends Component  {
 
                     {this.state.uid ? <div>Welcome, {this.state.userName}!</div> : <button onClick={() => { this.Login()  }}>Sync with Google</button>}
                     {(this.state.userName && !this.state.otherUser) ? <LinkGenerator link={this.setLink(this.state.uid)} /> : null}
-                    <Addevents createEvent={this.createNewEvent} />
+                    <Addevents createEvent={this.testcreateEvent} />
                     {this.Main()}
-                    <AddEvent createEvent={this.createNewEvent} />
             </div>
             )
     }
