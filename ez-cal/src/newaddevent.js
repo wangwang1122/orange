@@ -6,13 +6,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
 
-  class Newaddevents extends React.Component{
+  class Addevents extends React.Component{
     constructor(props) {
     super(props);
     this.state = {
         event: '',
-        starttime: '2019-10-26T10:30',
-        endtime: '2019-10-26T11:30',
+        starttime: '2019-11-01T10:00:00',
+        endtime: '2019-11-01T17:00:00',
         description: 'aa',
     };
     this.handleEvent=this.handleEvent.bind(this);
@@ -28,12 +28,12 @@ import TextField from '@material-ui/core/TextField';
     }
     handleStarttime(eventa) {
         this.setState({
-            starttime:eventa.target.value
+            starttime: eventa.target.value+":00"
         })
     }
     handleEndtime(eventa) {
         this.setState({
-            endtime:eventa.target.value
+            endtime:eventa.target.value+":00"
         })
     }
     handleDescription(eventa) {
@@ -43,12 +43,14 @@ import TextField from '@material-ui/core/TextField';
     }
     
     upload(){
+        console.log(this.state.starttime);
+      this.props.createEvent(this.state.event,this.state.starttime,this.state.endtime);
 
     }
 
 
     render(){
-        console.log(this.state.description);
+        console.log("starttime"  +this.state.starttime+" endtime:  "+ this.state.endtime);
       return (
         <Popup trigger={open => (<Button >{open ? "" : ""}</Button>)} modal>
                   {close => (
@@ -118,7 +120,7 @@ import TextField from '@material-ui/core/TextField';
         // defaultValue="2019-10-24T10:30"
         value={this.state.endtime}
         onChange={this.handleEndtime}
-        
+
         width=" 250"  
         InputLabelProps={{
           shrink: true,
@@ -160,4 +162,4 @@ import TextField from '@material-ui/core/TextField';
     }
 }
 
-export default Newaddevents;
+export default Addevents;
