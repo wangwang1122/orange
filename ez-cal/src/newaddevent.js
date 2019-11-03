@@ -12,8 +12,8 @@ class Addevents extends React.Component {
     this.state = {
       show: false,
       event: '',
-      starttime: '2019-11-01T10:00:00',
-      endtime: '2019-11-01T17:00:00',
+      starttime: '',
+      endtime: '',
       description: 'aa',
     };
     this.handleEvent = this.handleEvent.bind(this);
