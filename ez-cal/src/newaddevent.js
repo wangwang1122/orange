@@ -56,14 +56,11 @@ class Addevents extends React.Component {
   }
 
   upload() {
-    console.log(this.state.starttime);
     this.props.createEvent(this.state.event, this.state.starttime, this.state.endtime);
-
   }
 
 
   render() {
-    console.log("starttime" + this.state.starttime + " endtime:  " + this.state.endtime);
     return (
 
       <div>

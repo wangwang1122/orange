@@ -64,6 +64,7 @@ export default class ApiCalendar extends Component {
 
   setOtherID = (snap) => {
     if (snap.val()) {
+      console.log(snap.val())
       this.setState({
         otherCalID: snap.val()
       })
@@ -193,11 +194,11 @@ export default class ApiCalendar extends Component {
           this.setState({
             uid: this.getUserID(),
             userName: this.getUserName(),
-            otherCalID: this.calendar
+            otherCalID: this.gapi.client.calendar
           })
           db.child(this.getUserID()).child('events').set(googleEvents);
           db.child(this.getUserID()).child('userName').set(this.getUserName());
-          db.child(this.getUserID()).child('calID').set(this.calendar);
+          db.child(this.getUserID()).child('calID').set(this.getEmail());
           this.setBusy(googleEvents);
         });
   };
@@ -265,28 +266,17 @@ export default class ApiCalendar extends Component {
           if (nextEvent.className.includes("FriendBusy")) {
             if (nextEvent.className.includes("Sub")) {
               nextEvent.className = "daySubHourOverlapBusy"
-              // if (nextEvent.innerHTML) {
-              //      nextEvent.innerHTML = this.state.otherUser + ' ' + this.state.userName
-              // }
-
-            } else {
+            } 
+            else {
               nextEvent.className = "dayHourOverlapBusy"
-              // if (nextEvent.innerHTML) {
-              //      nextEvent.innerHTML = this.state.userName + ' ' + this.state.otherUser
-              // }
-
             }
           }
           else {
-            // if (j === startIndex) {
-            //   nextEvent.innerHTML = this.state.userName; 
-            // }
             nextEvent.className += "Busy";
           }
         }
       }
     }
-
   };
 
   setBusy2 = (events, userName) => {
@@ -328,21 +318,6 @@ export default class ApiCalendar extends Component {
   }
 
   setFree = () => {
-    // for (let i = 0; i < events.length; i++) {
-    //   let date = events[i].start.dateTime.substring(8, 10);
-    //   let startIndex = subTimes.indexOf(events[i].start.dateTime.substring(11, 16));
-    //   let endIndex = subTimes.indexOf(events[i].end.dateTime.substring(11, 16));
-
-    //   for (let j = startIndex; j < endIndex; j++) {
-    //     let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
-    //     if (nextEvent.className.includes("Busy")) {
-    //       continue;
-    //     }
-    //     else {
-    //       nextEvent.className += "Busy";
-    //     }
-    //   }
-    // }
     let x;
     while (document.getElementsByClassName("dayHourBusy").length > 0) {
       x = document.getElementsByClassName("dayHourBusy")[0]
@@ -379,12 +354,6 @@ export default class ApiCalendar extends Component {
       d.className = "daySubHour"
       d.innerHTML = ""
     }
-    // var y=document.getElementsByClassName("daySubHourBusy");
-    // console.log(y);
-    // var j;
-    // for(j=0;j<y.length;j++){
-    //     y[j].className="daySubHour"
-    // }
 
   };
 
@@ -437,6 +406,11 @@ export default class ApiCalendar extends Component {
     //console.log(this.gapi.auth2.getAuthInstance().currentUser['Ab']['El']);
     return this.gapi.auth2.getAuthInstance().currentUser['Ab']['w3']['ig'];
   }
+
+  getEmail() {
+    return this.gapi.auth2.getAuthInstance().currentUser.Ab.w3.U3;
+  }
+
   /**
    * Sign in Google user account
    */
