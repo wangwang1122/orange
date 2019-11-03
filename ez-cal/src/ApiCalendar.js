@@ -113,7 +113,7 @@ export default class ApiCalendar extends Component {
 
   dayGrid = () => {
     let [days, dates] = this.buildDayList();
-    let realTimes = subTimes.slice(0, subTimes.length-1)
+    let realTimes = subTimes.slice(0, subTimes.length - 1)
     let timeBlock = realTimes.map(x => {
       return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
     });
@@ -128,12 +128,12 @@ export default class ApiCalendar extends Component {
     for (let i = 0; i < days.length; i++) {
       let hours = [];
       for (let j = 0; j < subTimes.length; j++) {
-        if(subTimes[j] === "0:00") {
-          hours.push(<div id={`${dates[i]} ${subTimes[j]}`} styles={{display:"hidden"}} />);
+        if (subTimes[j] === "0:00") {
+          hours.push(<div id={`${dates[i]} ${subTimes[j]}`} styles={{ display: "hidden" }} />);
         }
         else if (times.includes(subTimes[j])) {
           hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />);
-        } 
+        }
         else {
           hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="daySubHour" />);
         }
@@ -199,9 +199,11 @@ export default class ApiCalendar extends Component {
             uid: this.getUserID(),
             userName: this.getUserName(),
           })
+
           db.child(this.getUserID()).child('events').set(googleEvents);
           db.child(this.getUserID()).child('userName').set(this.getUserName());
           db.child(this.getUserID()).child('calID').set(this.getEmail());
+
           this.setBusy(googleEvents);
         });
   };
@@ -227,23 +229,15 @@ export default class ApiCalendar extends Component {
           start = start.substring(1);
         }
 
-        console.log("start: " + start)
-
         if (end.substring(0, 1) === '0') {
           end = end.substring(1);
         }
 
-        console.log("end: " + end)
-
         let startIndex = subTimes.indexOf(start);
         let endIndex = subTimes.indexOf(end);
 
-        console.log(startIndex)
-        console.log(endIndex)
-
         for (let j = startIndex; j < endIndex; j++) {
           let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
-          console.log(nextEvent)
           if (nextEvent.className.includes("Busy")) {
             continue;
           }
@@ -280,7 +274,7 @@ export default class ApiCalendar extends Component {
           if (nextEvent.className.includes("FriendBusy")) {
             if (nextEvent.className.includes("Sub")) {
               nextEvent.className = "daySubHourOverlapBusy"
-            } 
+            }
             else {
               nextEvent.className = "dayHourOverlapBusy"
             }
@@ -547,7 +541,7 @@ export default class ApiCalendar extends Component {
 
   testcreateEvent(event, starttime, endtime) {
 
-    var attendees = this.state.otherCalID ? [{"email": this.state.otherCalID}] : [];
+    var attendees = this.state.otherCalID ? [{ "email": this.state.otherCalID }] : [];
 
     var uploadevent = {
       'summary': event,
@@ -568,11 +562,9 @@ export default class ApiCalendar extends Component {
       'resource': uploadevent
     });
 
-    request.execute(function (uploadevent) {
-      console.log('event created');
-    });
+    request.execute();
 
-     window.location.reload();
+    window.location.reload();
   }
 
 

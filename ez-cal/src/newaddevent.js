@@ -5,17 +5,20 @@ import "./index.css";
 class Addevents extends React.Component {
   constructor(props) {
     super(props);
+    var datePH = (new Date().toISOString().substring(0, 11));
+    console.log(datePH)
     this.state = {
       show: false,
       event: '',
-      starttime: '2019-11-04T12:00:00',
-      endtime: '2019-11-04T13:00:00',
+      starttime: datePH+'12:00',
+      endtime: datePH+'13:00',
     };
     this.handleEvent = this.handleEvent.bind(this);
     this.handleStarttime = this.handleStarttime.bind(this);
     this.handleEndtime = this.handleEndtime.bind(this);
     this.upload = this.upload.bind(this);
   }
+
   handleEvent(eventa) {
     this.setState({
       event: eventa.target.value
@@ -23,14 +26,14 @@ class Addevents extends React.Component {
   }
 
   handleStarttime(eventa) {
-    let newStart = eventa.target.value + ":00"
+    let newStart = eventa.target.value
     this.setState({
       starttime: newStart
     })
   }
 
   handleEndtime(eventa) {
-    let newEnd = eventa.target.value + ":00"
+    let newEnd = eventa.target.value
     this.setState({
       endtime: newEnd
     })
@@ -49,7 +52,7 @@ class Addevents extends React.Component {
   }
 
   upload() {
-    this.props.createEvent(this.state.event, this.state.starttime, this.state.endtime);
+    this.props.createEvent(this.state.event, this.state.starttime + ":00", this.state.endtime + ":00");
   }
 
   render() {
