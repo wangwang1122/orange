@@ -1,7 +1,5 @@
 import { db } from './firebase';
 import { subTimes, times } from './constants';
-import App from './App'
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import LinkGenerator from "./LinkGenerator";
 import { Switch, Route } from 'react-router-dom'
@@ -94,6 +92,7 @@ export default class ApiCalendar extends Component {
 
     return numberOfDays;
   }
+
   buildDayList = () => {
     let date = new Date();
     let numberOfDays = this.checkLastDay(date.getMonth() + 1, date.getFullYear());
@@ -114,7 +113,8 @@ export default class ApiCalendar extends Component {
 
   dayGrid = () => {
     let [days, dates] = this.buildDayList();
-    let timeBlock = subTimes.map(x => {
+    let realTimes = subTimes.slice(0, subTimes.length-1)
+    let timeBlock = realTimes.map(x => {
       return x.split(":")[1] === "00" ? <div className="dayTime">{x}</div> : <div className="dayTime"></div>;
     });
 
@@ -128,9 +128,13 @@ export default class ApiCalendar extends Component {
     for (let i = 0; i < days.length; i++) {
       let hours = [];
       for (let j = 0; j < subTimes.length; j++) {
-        if (times.includes(subTimes[j])) {
+        if(subTimes[j] === "0:00") {
+          hours.push(<div id={`${dates[i]} ${subTimes[j]}`} styles={{display:"hidden"}} />);
+        }
+        else if (times.includes(subTimes[j])) {
           hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="dayHour" />);
-        } else {
+        } 
+        else {
           hours.push(<div id={`${dates[i]} ${subTimes[j]}`} className="daySubHour" />);
         }
       }
@@ -142,6 +146,7 @@ export default class ApiCalendar extends Component {
         {hours}
       </div>);
     }
+
 
     return (
       <div className="dayWrapper">
@@ -205,10 +210,12 @@ export default class ApiCalendar extends Component {
     const userLink = window.location.pathname.substring(1);
     if (!userLink) {
       for (let i = 0; i < events.length; i++) {
+
         if (!events[i].start.dateTime) {
           continue;
         }
         let date = events[i].start.dateTime.substring(8, 10);
+
         if (date.substring(0, 1) === '0') {
           date = date.substring(1);
         }
@@ -219,15 +226,24 @@ export default class ApiCalendar extends Component {
         if (start.substring(0, 1) === '0') {
           start = start.substring(1);
         }
+
+        console.log("start: " + start)
+
         if (end.substring(0, 1) === '0') {
           end = end.substring(1);
         }
 
+        console.log("end: " + end)
+
         let startIndex = subTimes.indexOf(start);
         let endIndex = subTimes.indexOf(end);
 
+        console.log(startIndex)
+        console.log(endIndex)
+
         for (let j = startIndex; j < endIndex; j++) {
           let nextEvent = document.getElementById(`${date} ${subTimes[j]}`);
+          console.log(nextEvent)
           if (nextEvent.className.includes("Busy")) {
             continue;
           }
@@ -396,12 +412,10 @@ export default class ApiCalendar extends Component {
     };
   }
   getUserID() {
-    //console.log(this.gapi.auth2.getAuthInstance().currentUser['Ab']['El']);
     return this.gapi.auth2.getAuthInstance().currentUser['Ab']['El'];
   }
 
   getUserName() {
-    //console.log(this.gapi.auth2.getAuthInstance().currentUser['Ab']['El']);
     return this.gapi.auth2.getAuthInstance().currentUser['Ab']['w3']['ig'];
   }
 
@@ -476,14 +490,13 @@ export default class ApiCalendar extends Component {
   listUpcomingEvents(calendarId = this.calendar) {
     if (this.gapi) {
       let d = new Date();
-      d.setDate(d.getDate() + 6);
+      d.setDate(d.getDate() + 7);
       return this.gapi.client.calendar.events.list({
         'calendarId': calendarId,
         'timeMin': (new Date()).toISOString(),
         'timeMax': d.toISOString(),
         'showDeleted': false,
         'singleEvents': true,
-        //'maxResults': maxResults,
         'orderBy': 'startTime'
       });
     }
@@ -534,7 +547,7 @@ export default class ApiCalendar extends Component {
 
   testcreateEvent(event, starttime, endtime) {
 
-    console.log(this.state.otherCalID)
+    var attendees = this.state.otherCalID ? [{"email": this.state.otherCalID}] : [];
 
     var uploadevent = {
       'summary': event,
@@ -547,11 +560,7 @@ export default class ApiCalendar extends Component {
         'dateTime': endtime,
         'timeZone': 'America/Chicago'
       },
-      'attendees': [
-        {
-          "email": this.state.otherCalID
-        }
-      ]
+      'attendees': attendees
     };
 
     var request = this.gapi.client.calendar.events.insert({
@@ -562,13 +571,6 @@ export default class ApiCalendar extends Component {
     request.execute(function (uploadevent) {
       console.log('event created');
     });
-
-    if (this.state.otherCalID) {
-      var request = this.gapi.client.calendar.events.insert({
-        'calendarId': this.state.otherCalID,
-        'resource': uploadevent
-      });
-    }
 
      window.location.reload();
   }

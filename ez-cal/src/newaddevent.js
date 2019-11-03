@@ -1,9 +1,5 @@
-import React, { useState } from "react";
-import Popup from "reactjs-popup";
+import React from "react";
 import "./index.css";
-import { Delete, Field, Label, Button, Control, FontAwesomeIcon } from "rbx";
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 
 
 class Addevents extends React.Component {
@@ -12,14 +8,12 @@ class Addevents extends React.Component {
     this.state = {
       show: false,
       event: '',
-      starttime: '2019-11-01T10:00:00',
-      endtime: '2019-11-01T17:00:00',
-      description: 'aa',
+      starttime: '2019-11-04T12:00:00',
+      endtime: '2019-11-04T13:00:00',
     };
     this.handleEvent = this.handleEvent.bind(this);
     this.handleStarttime = this.handleStarttime.bind(this);
     this.handleEndtime = this.handleEndtime.bind(this);
-    this.handleDescription = this.handleDescription.bind(this);
     this.upload = this.upload.bind(this);
   }
   handleEvent(eventa) {
@@ -27,19 +21,18 @@ class Addevents extends React.Component {
       event: eventa.target.value
     })
   }
+
   handleStarttime(eventa) {
+    let newStart = eventa.target.value + ":00"
     this.setState({
-      starttime: eventa.target.value + ":00"
+      starttime: newStart
     })
   }
+
   handleEndtime(eventa) {
+    let newEnd = eventa.target.value + ":00"
     this.setState({
-      endtime: eventa.target.value + ":00"
-    })
-  }
-  handleDescription(eventa) {
-    this.setState({
-      description: eventa.target.value
+      endtime: newEnd
     })
   }
 
@@ -58,7 +51,6 @@ class Addevents extends React.Component {
   upload() {
     this.props.createEvent(this.state.event, this.state.starttime, this.state.endtime);
   }
-
 
   render() {
     return (
