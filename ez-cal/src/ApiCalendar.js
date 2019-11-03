@@ -64,7 +64,6 @@ export default class ApiCalendar extends Component {
 
   setOtherID = (snap) => {
     if (snap.val()) {
-      console.log(snap.val())
       this.setState({
         otherCalID: snap.val()
       })
@@ -194,7 +193,6 @@ export default class ApiCalendar extends Component {
           this.setState({
             uid: this.getUserID(),
             userName: this.getUserName(),
-            otherCalID: this.gapi.client.calendar
           })
           db.child(this.getUserID()).child('events').set(googleEvents);
           db.child(this.getUserID()).child('userName').set(this.getUserName());
@@ -536,6 +534,8 @@ export default class ApiCalendar extends Component {
 
   testcreateEvent(event, starttime, endtime) {
 
+    console.log(this.state.otherCalID)
+
     var uploadevent = {
       'summary': event,
       'description': '',
@@ -547,6 +547,11 @@ export default class ApiCalendar extends Component {
         'dateTime': endtime,
         'timeZone': 'America/Chicago'
       },
+      'attendees': [
+        {
+          "email": this.state.otherCalID
+        }
+      ]
     };
 
     var request = this.gapi.client.calendar.events.insert({
@@ -565,7 +570,7 @@ export default class ApiCalendar extends Component {
       });
     }
 
-    window.location.reload();
+    // window.location.reload();
   }
 
 
